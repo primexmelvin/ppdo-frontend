@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
 import { useAccentColor } from "../contexts/AccentColorContext";
 
-interface NavItem {
+interface SubMenuItem {
   name: string;
   href: string;
+}
+
+interface NavItem {
+  name: string;
+  href?: string;
   icon: React.ReactNode;
+  submenu?: SubMenuItem[];
 }
 
 interface SidebarProps {
@@ -75,6 +81,38 @@ const defaultNavItems: NavItem[] = [
     ),
   },
   {
+    name: "ORM",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+        />
+      </svg>
+    ),
+    submenu: [
+      {
+        name: "FB Pages",
+        href: "/dashboard/orm/fb-pages",
+      },
+      {
+        name: "Contact",
+        href: "/dashboard/orm/contact",
+      },
+      {
+        name: "E-Concern",
+        href: "/dashboard/orm/econcern",
+      },
+    ],
+  },
+  {
     name: "Settings",
     href: "/dashboard/settings",
     icon: (
@@ -108,6 +146,23 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
   const { isMinimized } = useSidebar();
   const pathname = usePathname();
   const { accentColorValue } = useAccentColor();
+  // Track which submenu is expanded
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  // Auto-expand submenu if one of its items is active
+  useEffect(() => {
+    navItems.forEach((item, index) => {
+      if (item.submenu && item.submenu.length > 0) {
+        const itemKey = item.href || `nav-item-${index}`;
+        const hasActiveSubmenu = item.submenu.some(
+          (sub) => pathname === sub.href
+        );
+        if (hasActiveSubmenu) {
+          setExpandedItems((prev) => new Set(prev).add(itemKey));
+        }
+      }
+    });
+  }, [pathname, navItems]);
 
   return (
     <>
@@ -134,11 +189,13 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
         `}
       >
         {/* Sidebar Header */}
-        <div className="h-16 px-4 sm:px-6 flex items-center justify-center border-b border-zinc-200 dark:border-zinc-800 relative">
+        <div className="h-16 px-4 sm:px-6 py-4 flex items-center justify-center border-b border-zinc-200 dark:border-zinc-800 relative">
           {/* Logo and text - hidden when minimized */}
           <div
             className={`flex items-center gap-1 transition-opacity duration-300 ${
-              isMinimized ? "md:opacity-0 md:absolute md:pointer-events-none" : ""
+              isMinimized
+                ? "md:opacity-0 md:absolute md:pointer-events-none"
+                : ""
             }`}
           >
             <img
@@ -160,11 +217,13 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
               </p>
             </div>
           </div>
-          
+
           {/* Logo - shown when minimized */}
           <div
             className={`hidden md:flex items-center justify-center w-full transition-opacity duration-300 ${
-              isMinimized ? "opacity-100" : "opacity-0 absolute pointer-events-none"
+              isMinimized
+                ? "opacity-100"
+                : "opacity-0 absolute pointer-events-none"
             }`}
           >
             <img
@@ -198,51 +257,185 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4">
           <ul className="space-y-2">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
+            {navItems.map((item, index) => {
+              const hasSubmenu = item.submenu && item.submenu.length > 0;
+              const itemKey = item.href || `nav-item-${index}`;
+              const isExpanded = expandedItems.has(itemKey);
+              const isActive = item.href
+                ? pathname === item.href
+                : item.submenu?.some((sub) => pathname === sub.href);
+
               return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`
-                      flex items-center rounded-xl
-                      transition-all duration-200 group
-                      ${
-                        isMinimized
-                          ? "md:justify-center md:px-3 md:py-3"
-                          : "gap-3 px-4 py-3"
-                      }
-                      ${
-                        isActive
-                          ? "font-medium"
-                          : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                      }
-                    `}
-                    style={
-                      isActive
-                        ? {
-                            backgroundColor: `${accentColorValue}10`,
-                            color: accentColorValue,
+                <li key={itemKey}>
+                  {hasSubmenu ? (
+                    <>
+                      {/* Parent menu item with expand/collapse */}
+                      <button
+                        onClick={() => {
+                          if (isMinimized) return;
+                          setExpandedItems((prev) => {
+                            const newSet = new Set(prev);
+                            if (newSet.has(itemKey)) {
+                              newSet.delete(itemKey);
+                            } else {
+                              newSet.add(itemKey);
+                            }
+                            return newSet;
+                          });
+                        }}
+                        className={`
+                          w-full flex items-center rounded-xl
+                          transition-all duration-200 group
+                          ${
+                            isMinimized
+                              ? "md:justify-center md:px-3 md:py-3"
+                              : "gap-3 px-4 py-3 justify-between"
                           }
-                        : undefined
-                    }
-                    title={isMinimized ? item.name : undefined}
-                  >
-                    <span
-                      className={isMinimized ? "flex-shrink-0" : ""}
-                      style={isActive ? { color: accentColorValue } : undefined}
-                    >
-                      {item.icon}
-                    </span>
-                    <span
+                          ${
+                            isActive
+                              ? "font-medium"
+                              : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                          }
+                        `}
+                        style={
+                          isActive
+                            ? {
+                                backgroundColor: `${accentColorValue}10`,
+                                color: accentColorValue,
+                              }
+                            : undefined
+                        }
+                        title={isMinimized ? item.name : undefined}
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <span
+                            className={isMinimized ? "shrink-0" : ""}
+                            style={
+                              isActive ? { color: accentColorValue } : undefined
+                            }
+                          >
+                            {item.icon}
+                          </span>
+                          <span
+                            className={`
+                              transition-all duration-300 whitespace-nowrap
+                              ${isMinimized ? "md:hidden" : ""}
+                            `}
+                          >
+                            {item.name}
+                          </span>
+                        </div>
+                        {!isMinimized && (
+                          <svg
+                            className={`w-4 h-4 transition-transform duration-200 shrink-0 ${
+                              isExpanded ? "rotate-180" : ""
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                      {/* Submenu items */}
+                      {!isMinimized && isExpanded && item.submenu && (
+                        <ul className="ml-4 mt-1 space-y-1 border-l-2 border-zinc-200 dark:border-zinc-800 pl-4">
+                          {item.submenu.map((subItem) => {
+                            const isSubActive = pathname === subItem.href;
+                            return (
+                              <li key={subItem.href}>
+                                <Link
+                                  href={subItem.href}
+                                  className={`
+                                    flex items-center gap-2 px-3 py-2 rounded-lg
+                                    transition-all duration-200
+                                    ${
+                                      isSubActive
+                                        ? "font-medium"
+                                        : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                    }
+                                  `}
+                                  style={
+                                    isSubActive
+                                      ? {
+                                          backgroundColor: `${accentColorValue}10`,
+                                          color: accentColorValue,
+                                        }
+                                      : undefined
+                                  }
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full ${
+                                      isSubActive
+                                        ? ""
+                                        : "bg-zinc-400 dark:bg-zinc-600"
+                                    }`}
+                                    style={
+                                      isSubActive
+                                        ? { backgroundColor: accentColorValue }
+                                        : undefined
+                                    }
+                                  />
+                                  <span>{subItem.name}</span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </>
+                  ) : (
+                    /* Regular menu item */
+                    <Link
+                      href={item.href || "#"}
                       className={`
-                        transition-all duration-300 whitespace-nowrap
-                        ${isMinimized ? "md:hidden" : ""}
+                        flex items-center rounded-xl
+                        transition-all duration-200 group
+                        ${
+                          isMinimized
+                            ? "md:justify-center md:px-3 md:py-3"
+                            : "gap-3 px-4 py-3"
+                        }
+                        ${
+                          isActive
+                            ? "font-medium"
+                            : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        }
                       `}
+                      style={
+                        isActive
+                          ? {
+                              backgroundColor: `${accentColorValue}10`,
+                              color: accentColorValue,
+                            }
+                          : undefined
+                      }
+                      title={isMinimized ? item.name : undefined}
                     >
-                      {item.name}
-                    </span>
-                  </Link>
+                      <span
+                        className={isMinimized ? "shrink-0" : ""}
+                        style={
+                          isActive ? { color: accentColorValue } : undefined
+                        }
+                      >
+                        {item.icon}
+                      </span>
+                      <span
+                        className={`
+                          transition-all duration-300 whitespace-nowrap
+                          ${isMinimized ? "md:hidden" : ""}
+                        `}
+                      >
+                        {item.name}
+                      </span>
+                    </Link>
+                  )}
                 </li>
               );
             })}

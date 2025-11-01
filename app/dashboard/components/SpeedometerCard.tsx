@@ -44,14 +44,14 @@ export function SpeedometerCard({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           {icon && (
-            <div
+            <div 
               className="p-2 rounded-lg flex items-center justify-center [&_svg]:w-5 [&_svg]:h-5"
-              style={{
+              style={{ 
                 backgroundColor: `${accentColorValue}10`,
                 color: accentColorValue,
               }}
             >
-              {icon}
+                {icon}
             </div>
           )}
           <div>
@@ -115,10 +115,10 @@ export function SpeedometerCard({
             strokeWidth="28"
             strokeLinecap="butt"
           />
-
+          
           {/* Needle - rotates from pivot point at bottom center */}
           <g
-            style={{
+            style={{ 
               transformOrigin: `${centerX}px ${centerY}px`,
               transform: `rotate(${needleRotation}deg)`,
               transition: "transform 1s ease-out",

@@ -10,6 +10,8 @@ interface BreadcrumbItem {
 interface BreadcrumbContextType {
   customBreadcrumbs: BreadcrumbItem[] | null;
   setCustomBreadcrumbs: (items: BreadcrumbItem[] | null) => void;
+  onBreadcrumbClick?: (href: string) => void;
+  setOnBreadcrumbClick: (handler: ((href: string) => void) | undefined) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(
@@ -17,13 +19,20 @@ const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(
 );
 
 export function BreadcrumbProvider({ children }: { children: ReactNode }) {
-  const [customBreadcrumbs, setCustomBreadcrumbs] = useState<BreadcrumbItem[] | null>(null);
+  const [customBreadcrumbs, setCustomBreadcrumbs] = useState<
+    BreadcrumbItem[] | null
+  >(null);
+  const [onBreadcrumbClick, setOnBreadcrumbClick] = useState<
+    ((href: string) => void) | undefined
+  >(undefined);
 
   return (
     <BreadcrumbContext.Provider
       value={{
         customBreadcrumbs,
         setCustomBreadcrumbs,
+        onBreadcrumbClick,
+        setOnBreadcrumbClick,
       }}
     >
       {children}
@@ -38,4 +47,3 @@ export function useBreadcrumb() {
   }
   return context;
 }
-

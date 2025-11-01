@@ -3,21 +3,24 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
-import { SearchBar } from "./SearchBar";
 import { useSidebar } from "../contexts/SidebarContext";
-import { useAccentColor, type AccentColor } from "../contexts/AccentColorContext";
+import {
+  useAccentColor,
+  type AccentColor,
+} from "../contexts/AccentColorContext";
 
 interface HeaderProps {
-  onSearchChange: (query: string) => void;
-  searchQuery: string;
+  onSearchChange?: (query: string) => void;
+  searchQuery?: string;
 }
 
 export function Header({ onSearchChange, searchQuery }: HeaderProps) {
   const [userEmail, setUserEmail] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showAccentColors, setShowAccentColors] = useState(false);
-  const [currentTime, setCurrentTime] = useState<string>("");
-  const [location, setLocation] = useState<string>("Getting location...");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(3);
   const router = useRouter();
   const { isMinimized, toggleMinimize } = useSidebar();
   const { accentColor, setAccentColor, accentColorValue } = useAccentColor();
@@ -27,83 +30,8 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
     if (email) {
       setUserEmail(email);
     }
-  }, []);
-
-  // Update time every second
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-      });
-      setCurrentTime(timeString);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Get user location
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setLocation("Location not supported");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          
-          // Reverse geocoding using Nominatim (OpenStreetMap)
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
-          );
-          
-          if (response.ok) {
-            const data = await response.json();
-            const address = data.address;
-            
-            // Build location string
-            let locationString = "";
-            if (address.city || address.town || address.municipality) {
-              locationString = address.city || address.town || address.municipality;
-            } else if (address.village) {
-              locationString = address.village;
-            }
-            
-            if (address.state || address.province) {
-              locationString += locationString ? `, ${address.state || address.province}` : (address.state || address.province);
-            }
-            
-            if (address.country) {
-              locationString += locationString ? `, ${address.country}` : address.country;
-            }
-            
-            setLocation(locationString || "Location found");
-          } else {
-            setLocation("Tarlac, Philippines");
-          }
-        } catch (error) {
-          console.error("Error getting location:", error);
-          setLocation("Tarlac, Philippines");
-        }
-      },
-      (error) => {
-        console.error("Geolocation error:", error);
-        setLocation("Tarlac, Philippines");
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 600000, // 10 minutes
-      }
-    );
+    // Mock user name - in production, this would come from user data/API
+    setUserName("Maria Cristina Santos");
   }, []);
 
   function handleLogout() {
@@ -115,8 +43,8 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-[#f8f8f8]/95 dark:bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-zinc-800">
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Left section - Sidebar Toggle, Time and Location */}
+        <div className="flex items-center justify-between h-16 py-4">
+          {/* Left section - Sidebar Toggle, Welcome and User Name */}
           <div className="flex items-center gap-4 flex-1">
             {/* Sidebar Toggle Button */}
             <button
@@ -147,41 +75,169 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                 )}
               </svg>
             </button>
-            
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-zinc-500 dark:text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 font-mono">
-                  {currentTime}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-zinc-500 dark:text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                  {location}
-                </span>
-              </div>
-            </div>
-          </div>
 
-          {/* Center section - Search */}
-          <div className="hidden md:flex items-center gap-4 flex-1 max-w-md mx-4">
-            <SearchBar searchQuery={searchQuery} onSearchChange={onSearchChange} />
+            <div className="flex flex-col">
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                Welcome back,
+              </span>
+              <span
+                className="text-lg font-semibold text-zinc-900 dark:text-zinc-100"
+                style={{ fontFamily: "var(--font-cinzel), serif" }}
+              >
+                {userName || "User"}
+              </span>
+            </div>
           </div>
 
           {/* Right section - Actions */}
           <div className="flex items-center gap-3">
-            {/* Theme Toggle */}
-            <ThemeToggle />
+            {/* Notification Bell */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                title="Notifications"
+              >
+                <svg
+                  className="w-8 h-8 text-zinc-600 dark:text-zinc-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  />
+                </svg>
+                {notificationCount > 0 && (
+                  <span
+                    className="absolute top-1 right-1 w-2 h-2 rounded-full"
+                    style={{ backgroundColor: accentColorValue }}
+                  />
+                )}
+                {notificationCount > 0 && (
+                  <span
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center"
+                    style={{ backgroundColor: accentColorValue }}
+                  >
+                    {notificationCount > 9 ? "9+" : notificationCount}
+                  </span>
+                )}
+              </button>
 
-            {/* Mobile Search Toggle */}
-            <div className="md:hidden">
-              <SearchBar searchQuery={searchQuery} onSearchChange={onSearchChange} />
+              {/* Notifications Dropdown */}
+              {showNotifications && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-2xl z-20 max-h-[500px] overflow-hidden flex flex-col">
+                    {/* Notifications Header */}
+                    <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                        Notifications
+                      </h3>
+                      {notificationCount > 0 && (
+                        <button
+                          onClick={() => setNotificationCount(0)}
+                          className="text-sm font-medium"
+                          style={{ color: accentColorValue }}
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Notifications List */}
+                    <div className="flex-1 overflow-y-auto">
+                      {notificationCount > 0 ? (
+                        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                          {/* Sample Notifications */}
+                          {[
+                            {
+                              id: 1,
+                              title: "New document received",
+                              message:
+                                "A new incoming document requires your review",
+                              time: "5 minutes ago",
+                              isRead: false,
+                            },
+                            {
+                              id: 2,
+                              title: "Approval pending",
+                              message:
+                                "3 documents are waiting for your approval",
+                              time: "1 hour ago",
+                              isRead: false,
+                            },
+                            {
+                              id: 3,
+                              title: "System update",
+                              message:
+                                "System maintenance scheduled for tonight",
+                              time: "2 hours ago",
+                              isRead: false,
+                            },
+                          ].map((notification) => (
+                            <div
+                              key={notification.id}
+                              className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 cursor-pointer transition-colors"
+                              onClick={() => {
+                                // Handle notification click
+                                setShowNotifications(false);
+                              }}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className="w-2 h-2 rounded-full mt-2 shrink-0"
+                                  style={{
+                                    backgroundColor: notification.isRead
+                                      ? "transparent"
+                                      : accentColorValue,
+                                  }}
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                                    {notification.title}
+                                  </p>
+                                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                                    {notification.message}
+                                  </p>
+                                  <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">
+                                    {notification.time}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="p-8 text-center">
+                          <svg
+                            className="w-12 h-12 mx-auto mb-3 text-zinc-400 dark:text-zinc-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                            />
+                          </svg>
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                            No new notifications
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* User Menu */}
@@ -209,7 +265,12 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
 
@@ -229,7 +290,7 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                         Administrator
                       </p>
                     </div>
-                    
+
                     {/* Accent Color Theme Selection */}
                     <div className="border-b border-zinc-200 dark:border-zinc-700">
                       <button
@@ -257,7 +318,16 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                       </button>
                       {showAccentColors && (
                         <div className="px-4 pb-2 space-y-1">
-                          {(["green", "blue", "purple", "orange", "red", "teal"] as AccentColor[]).map((color) => {
+                          {(
+                            [
+                              "green",
+                              "blue",
+                              "purple",
+                              "orange",
+                              "red",
+                              "teal",
+                            ] as AccentColor[]
+                          ).map((color) => {
                             const colorValue =
                               color === "green"
                                 ? "#15803d"
@@ -310,14 +380,34 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                         </div>
                       )}
                     </div>
-                    
+
+                    {/* Theme Toggle */}
+                    <div className="border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+                          Theme
+                        </p>
+                        <ThemeToggle />
+                      </div>
+                    </div>
+
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                          />
                         </svg>
                         Sign Out
                       </div>
@@ -332,4 +422,3 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
     </header>
   );
 }
-

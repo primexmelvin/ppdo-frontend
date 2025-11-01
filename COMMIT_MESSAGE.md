@@ -1,136 +1,76 @@
-feat: Add breadcrumbs navigation, outgoing page, and smart table filters
+feat: enhance dashboard UI with improved navigation, time/location display, and table features
 
-## Overview
-This commit introduces comprehensive navigation improvements, a new outgoing documents page, and enhanced table functionality with advanced filtering and sorting capabilities.
+This commit introduces several major UI/UX improvements to the dashboard application:
 
-## Features Added
+## UI/UX Enhancements
 
-### 1. Breadcrumbs Navigation System
-- Created reusable `Breadcrumbs` component with automatic route parsing
-- Integrated breadcrumbs into dashboard layout for all pages
-- Added `BreadcrumbContext` for custom breadcrumb overrides
-- Breadcrumbs automatically generate from pathname segments
-- Supports custom breadcrumbs via context (e.g., category names)
-- Responsive design with text truncation on mobile
-- Uses accent color for current page indicator
+### Header Improvements
+- **Move theme toggle to profile dropdown**: Relocated the theme toggle from the header to the user profile dropdown menu for a cleaner header interface
+- **Replace email with full name in welcome message**: Updated "Welcome back" message to display user's full name (currently using mock data "Maria Cristina Santos") instead of email address
+- **Reorganize header layout**: Simplified header structure with welcome message on left and action buttons on right
 
-**Files:**
-- `app/dashboard/components/Breadcrumbs.tsx` (new)
-- `app/dashboard/contexts/BreadcrumbContext.tsx` (new)
-- `app/dashboard/layout.tsx` (modified)
+### Navigation & Layout
+- **Create reusable TimeLocation component**: Extracted time and location display into a standalone component (`TimeLocation.tsx`) for better maintainability
+- **Reposition time/location display**: Moved time and location from header to main content area, positioned on the right side opposite breadcrumbs for better visual balance
+- **Remove back button from FB Pages**: Removed "Back to Accounts" button from individual Facebook page messenger interfaces, relying on breadcrumbs for navigation
 
-### 2. Outgoing Documents Page
-- Complete outgoing documents management page
-- Three category cards:
-  - Legal Documents (87 documents)
-  - Memo (142 documents)
-  - Fuel Request (53 documents)
-- Square category cards matching incoming page design
-- Integrated breadcrumbs with dynamic category names
-- Full table view with sortable columns and filters
-- Accent color integration throughout
+## Table Enhancements
 
-**Files:**
-- `app/dashboard/outgoing/page.tsx` (new)
+### Category Tables (Incoming & Outgoing)
+- **Add row numbering column**: Introduced "No." column as the first column in category tables showing sequential row numbers based on pagination
+- **Implement comprehensive pagination system**:
+  - Added pagination state management with configurable items per page (5, 10, 25, 50)
+  - Implemented page navigation with Previous/Next buttons
+  - Added dynamic page number buttons (displays up to 5 pages with smart positioning)
+  - Auto-reset to page 1 when filters, search, or sorting changes
+  - Enhanced footer with range display (e.g., "Showing 1-10 of 50 documents")
+  - Added items-per-page selector dropdown
+  
+- **Add delete functionality**:
+  - Implemented delete icon/button in each table row's Actions column
+  - Added two-step confirmation (click delete → show Confirm/Cancel buttons)
+  - Integrated delete functionality that updates state immediately
+  - Works seamlessly with filtering, sorting, and pagination
 
-### 3. Smart Table System
-Enhanced both incoming and outgoing document tables with:
+## Technical Improvements
 
-#### Advanced Filtering
-- Multi-select status filters (checkboxes)
-- Multi-select priority filters (checkboxes)
-- Date range filters (from/to date pickers)
-- Collapsible filter panel with toggle button
-- Active filter count badge indicator
-- Reset filters functionality
-- Filters work in combination (AND logic)
-
-#### Enhanced Sorting
-- All columns sortable via header clicks
-- Toggle ascending/descending on repeated clicks
-- Improved date sorting using raw date values
-- Visual sort indicators with accent color
-- Proper handling of string, number, and date comparisons
-
-#### Search Integration
-- Text search across all document fields
-- Real-time filtering as user types
-- Search works in combination with other filters
-
-#### UI Improvements
-- Filter button highlights when filters are active
-- Badge showing number of active filters
-- "(Filtered)" indicator in table footer
-- Responsive filter panel grid layout
-- Accent color styling for filter controls
-
-**Files:**
-- `app/dashboard/incoming/page.tsx` (modified)
-- `app/dashboard/outgoing/page.tsx` (modified)
-
-### 4. Add Document Button
-- Added prominent "Add Document" button in category table views
-- Visible in both incoming and outgoing pages
-- Styled with accent color for consistency
-- Positioned between search and filter controls
-
-**Files:**
-- `app/dashboard/incoming/page.tsx` (modified)
-- `app/dashboard/outgoing/page.tsx` (modified)
-
-### 5. Navigation Improvements
-- Removed "Back to Categories" button (replaced by breadcrumbs)
-- Simplified page headers in table views
-- Improved navigation flow using breadcrumb clicks
-
-**Files:**
-- `app/dashboard/incoming/page.tsx` (modified)
-- `app/dashboard/outgoing/page.tsx` (modified)
-
-## Technical Details
+### Component Architecture
+- Extracted static data into separate files (`data.ts`/`data.tsx`) for incoming and outgoing categories
+- Improved component organization and separation of concerns
+- Enhanced responsive design with mobile-first approach
 
 ### State Management
-- Added filter state for status, priority, and date range
-- Enhanced document interfaces with `dateSubmittedRaw` and `dateIssuedRaw` for proper date sorting
-- Implemented `useMemo` for optimized filtering and sorting performance
+- Converted documents from `useMemo` to `useState` to support deletion operations
+- Added proper state management for pagination across multiple pages
+- Improved state synchronization between filters, search, and pagination
 
-### Data Structure Changes
-- Extended `Document` interface with raw date fields for accurate date comparisons
-- Added `Filters` interface for type-safe filter state
-- Maintained backward compatibility with existing document structures
+## Files Changed
 
-### Context Integration
-- Breadcrumb context integrated into dashboard provider chain
-- Maintains filter and search state across component re-renders
-- Proper cleanup on component unmount
+### New Files
+- `app/dashboard/components/TimeLocation.tsx` - Reusable time and location component
+- `app/dashboard/incoming/data.tsx` - Static data for incoming categories
+- `app/dashboard/outgoing/data.ts` - Static data for outgoing categories
+- `app/dashboard/incoming/[categoryId]/page.tsx` - Dynamic route for incoming category pages
+- `app/dashboard/outgoing/[categoryId]/page.tsx` - Dynamic route for outgoing category pages
+- `app/dashboard/orm/fb-pages/[accountId]/page.tsx` - Dynamic route for FB account messenger
+- `app/dashboard/orm/econcern/page.tsx` - E-Concern submenu page
 
-## UI/UX Improvements
-- Consistent accent color usage across all new components
-- Mobile-first responsive design
-- Clear visual feedback for active filters and sorting
-- Intuitive filter controls with checkboxes and date pickers
-- Improved information hierarchy with breadcrumbs
+### Modified Files
+- `app/dashboard/components/Header.tsx` - Header reorganization, theme toggle removal, welcome message update
+- `app/dashboard/components/Sidebar.tsx` - Theme toggle integration (removed from header)
+- `app/dashboard/layout.tsx` - TimeLocation component integration, layout adjustments
+- `app/dashboard/incoming/page.tsx` - Navigation updates, data extraction
+- `app/dashboard/outgoing/page.tsx` - Navigation updates, data extraction
+- `app/dashboard/orm/fb-pages/[accountId]/page.tsx` - Removed back button
 
-## Browser Compatibility
-- Uses native HTML5 date inputs
-- CSS Grid for responsive filter layouts
-- Fallback support for older browsers via Tailwind utilities
+## User Experience Impact
 
-## Performance Optimizations
-- Memoized filter calculations to prevent unnecessary re-renders
-- Efficient date comparisons using raw timestamp values
-- Optimized sort algorithms for large datasets
+- **Improved Navigation**: Time/location and breadcrumbs positioned for better visual hierarchy
+- **Enhanced Data Management**: Row numbers and pagination make large datasets more manageable
+- **Better Information Density**: Tables can now handle more data with pagination
+- **Streamlined Actions**: Delete functionality with confirmation prevents accidental deletions
+- **Cleaner Header**: Reduced header clutter improves focus on main content
+- **Consistent Experience**: All category tables now have uniform features and behavior
 
-## Testing Considerations
-- Filter combinations should be tested (status + priority + date range)
-- Date range edge cases (empty dates, invalid ranges)
-- Search + filter combinations
-- Sorting with filters active
-- Mobile responsiveness across all new components
-
----
-
-**Breaking Changes:** None
-**Migration Notes:** No migration required - all changes are additive
-**Documentation:** Component interfaces and props documented in code
-
+## Breaking Changes
+None - all changes are backward compatible and enhance existing functionality.

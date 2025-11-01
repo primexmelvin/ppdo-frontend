@@ -17,7 +17,7 @@ interface BreadcrumbsProps {
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   const pathname = usePathname();
   const { accentColorValue } = useAccentColor();
-  const { customBreadcrumbs } = useBreadcrumb();
+  const { customBreadcrumbs, onBreadcrumbClick } = useBreadcrumb();
 
   // Generate breadcrumbs from pathname if not provided
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
@@ -33,7 +33,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     let currentPath = "";
     segments.forEach((segment, index) => {
       currentPath += `/${segment}`;
-      
+
       // Skip if it's the dashboard root
       if (segment === "dashboard") return;
 
@@ -61,7 +61,10 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
   }
 
   return (
-    <nav className="flex items-center gap-2 text-sm mb-4 sm:mb-6" aria-label="Breadcrumb">
+    <nav
+      className="flex items-center gap-2 text-sm mb-4 sm:mb-6"
+      aria-label="Breadcrumb"
+    >
       <ol className="flex items-center gap-2 flex-wrap">
         {breadcrumbs.map((item, index) => {
           const isLast = index === breadcrumbs.length - 1;
@@ -93,6 +96,18 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
               ) : item.href ? (
                 <Link
                   href={item.href}
+                  onClick={(e) => {
+                    // If clicking on current route, prevent navigation and call handler
+                    if (item.href === pathname) {
+                      e.preventDefault();
+                      if (onBreadcrumbClick && item.href) {
+                        onBreadcrumbClick(item.href);
+                      }
+                    } else if (onBreadcrumbClick && item.href) {
+                      // Call handler but allow navigation for different routes
+                      onBreadcrumbClick(item.href);
+                    }
+                  }}
                   className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors truncate max-w-[150px] sm:max-w-none"
                 >
                   {item.label}
@@ -109,4 +124,3 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     </nav>
   );
 }
-
