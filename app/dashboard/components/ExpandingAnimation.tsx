@@ -125,7 +125,7 @@ export function ExpandingAnimation() {
 
         {/* THE CARD WE'RE ENTERING LIKE A TUBE - STAYS SHARP */}
         <div className="card-container origin-center tube-animation">
-          <div className="bg-white dark:bg-zinc-950 rounded-3xl border-2 border-zinc-300 dark:border-zinc-700 p-8 w-[320px] h-[220px] shadow-2xl">
+          <div className="bg-[#f8f8f8] dark:bg-zinc-950 rounded-3xl border-2 border-zinc-300 dark:border-zinc-700 p-8 w-[320px] h-[220px] shadow-2xl">
             <div className="flex items-start justify-between mb-4">
               <span className="text-5xl">💾</span>
               <span className="px-3 py-1 rounded-full text-xs font-medium border bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800">

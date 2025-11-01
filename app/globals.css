@@ -9,8 +9,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-tt-ramillas);
-  --font-mono: var(--font-tt-ramillas);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-inter), monospace;
+  --font-heading: var(--font-cinzel), serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,7 +28,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-tt-ramillas), Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-cinzel), serif;
 }
 
 @keyframes fade-in-up {
@@ -70,6 +75,25 @@ body {
   to {
     clip-path: circle(150% at var(--toggle-x, 50%) var(--toggle-y, 50%));
   }
+}
+
+@keyframes progress-bar {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progress-bar {
+  animation: progress-bar 2s ease-in-out infinite;
+  left: 0;
+  top: 0;
+  height: 100%;
 }
 
 .animate-fade-in-up {
