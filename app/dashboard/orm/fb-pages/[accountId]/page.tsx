@@ -221,7 +221,7 @@ export default function AccountMessengerPage() {
   return (
     <>
       {/* Page Header */}
-      <div className="mb-6">
+      <div className="mb-4">
         <div className="flex items-center gap-4">
           <img
             src={account.profilePic}

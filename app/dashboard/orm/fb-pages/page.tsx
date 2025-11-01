@@ -27,9 +27,9 @@ export default function FBPagesPage() {
   return (
     <>
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h1
-          className="text-3xl sm:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2"
+          className="text-3xl sm:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1"
           style={{ fontFamily: "var(--font-cinzel), serif" }}
         >
           FB Pages

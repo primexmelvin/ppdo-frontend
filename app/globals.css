@@ -31,7 +31,12 @@ body {
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-cinzel), serif;
 }
 
@@ -96,15 +101,120 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
 }
 
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(-10px) translateX(-10px) rotate(-2deg);
+  }
+}
+
+@keyframes float-medium {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) translateX(15px) rotate(3deg);
+  }
+}
+
+@keyframes float-slow-delayed {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-25px) translateX(-15px) rotate(-2deg);
+  }
+  75% {
+    transform: translateY(-15px) translateX(15px) rotate(2deg);
+  }
+}
+
+@keyframes float-medium-delayed {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-25px) translateX(-20px) rotate(-3deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 6s ease-in-out infinite;
+}
+
+.animate-float-slow-delayed {
+  animation: float-slow-delayed 10s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.animate-float-medium-delayed {
+  animation: float-medium-delayed 7s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
 .animate-fade-in-up {
   animation: fade-in-up 0.5s ease-out;
+}
+
+/* Depth of Field Effect */
+.depth-of-field-container {
+  perspective: 1000px;
+}
+
+.depth-of-field-container img {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  will-change: transform;
+}
+
+.depth-of-field-container:hover img {
+  transform: translateZ(50px) scale(1.02);
+  filter: drop-shadow(0 35px 60px rgba(0, 0, 0, 0.25)) brightness(1.05);
+}
+
+/* Depth of field blur effect for floating elements */
+.depth-of-field-container:hover ~ .floating-elements-wrapper,
+.floating-elements-wrapper:has(~ .depth-of-field-container:hover) {
+  filter: blur(3px);
+  opacity: 0.6;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* Alternative approach - blur floating elements when hovering over container */
+.depth-of-field-container:hover ~ .floating-elements-wrapper * {
+  filter: blur(2px);
+  opacity: 0.7;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* When hovering over image container, blur all siblings */
+.depth-of-field-container:hover {
+  z-index: 20;
+}
+
+.depth-of-field-container:hover ~ * {
+  filter: blur(2px);
+  opacity: 0.75;
+  transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
 /* Smooth transition for all elements during theme change */
 .transition-theme {
   transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Overlay for radial reveal effect */

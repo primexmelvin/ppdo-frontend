@@ -1,16 +1,16 @@
 "use client";
 
-import { Sidebar } from "./components/Sidebar";
-import { Header } from "./components/Header";
-import { Breadcrumbs } from "./components/Breadcrumbs";
-import { TimeLocation } from "./components/TimeLocation";
-import AIAssistant from "./components/AIAssistant";
-import { SearchProvider } from "./contexts/SearchContext";
-import { SidebarProvider } from "./contexts/SidebarContext";
-import { AccentColorProvider } from "./contexts/AccentColorContext";
-import { BreadcrumbProvider } from "./contexts/BreadcrumbContext";
+import { Sidebar } from "../dashboard/components/Sidebar";
+import { Header } from "../dashboard/components/Header";
+import { Breadcrumbs } from "../dashboard/components/Breadcrumbs";
+import { TimeLocation } from "../dashboard/components/TimeLocation";
+import AIAssistant from "../dashboard/components/AIAssistant";
+import { SearchProvider } from "../dashboard/contexts/SearchContext";
+import { SidebarProvider } from "../dashboard/contexts/SidebarContext";
+import { AccentColorProvider } from "../dashboard/contexts/AccentColorContext";
+import { BreadcrumbProvider } from "../dashboard/contexts/BreadcrumbContext";
 
-function DashboardContent({ children }: { children: React.ReactNode }) {
+function MailContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-[#f8f8f8] dark:bg-zinc-950 flex">
       {/* Sidebar */}
@@ -40,7 +40,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function DashboardLayout({
+export default function MailLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -50,10 +50,11 @@ export default function DashboardLayout({
       <SidebarProvider>
         <AccentColorProvider>
           <BreadcrumbProvider>
-            <DashboardContent>{children}</DashboardContent>
+            <MailContent>{children}</MailContent>
           </BreadcrumbProvider>
         </AccentColorProvider>
       </SidebarProvider>
     </SearchProvider>
   );
 }
+

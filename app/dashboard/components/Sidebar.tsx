@@ -81,6 +81,25 @@ const defaultNavItems: NavItem[] = [
     ),
   },
   {
+    name: "Queue",
+    href: "/dashboard/queue",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M4 6h16M4 10h16M4 14h16M4 18h16"
+        />
+      </svg>
+    ),
+  },
+  {
     name: "ORM",
     icon: (
       <svg
@@ -114,7 +133,6 @@ const defaultNavItems: NavItem[] = [
   },
   {
     name: "Settings",
-    href: "/dashboard/settings",
     icon: (
       <svg
         className="w-5 h-5"
@@ -136,6 +154,12 @@ const defaultNavItems: NavItem[] = [
         />
       </svg>
     ),
+    submenu: [
+      {
+        name: "User Management",
+        href: "/dashboard/settings/user-management",
+      },
+    ],
   },
 ];
 
@@ -201,12 +225,12 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
             <img
               src="/logo.png"
               alt="Logo"
-              className="h-8 object-contain shrink-0"
+              className="h-12 object-contain shrink-0"
             />
             <img
               src="/y.png"
               alt="Y Logo"
-              className="h-8 object-contain shrink-0"
+              className="h-12 object-contain shrink-0"
             />
             <div className="flex flex-col ml-1 leading-tight">
               <h2 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm leading-tight">
@@ -229,7 +253,7 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
             <img
               src="/logo.png"
               alt="Tarlac Provincial Government Logo"
-              className="h-12 w-12 object-contain"
+              className="h-16 w-16 object-contain"
             />
           </div>
 

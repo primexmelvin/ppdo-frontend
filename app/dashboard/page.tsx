@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { KPICard } from "./components/KPICard";
-import { DocumentActivity } from "./components/DocumentActivity";
+import { LoginTrail } from "./components/LoginTrail";
 import { StatsCard } from "./components/StatsCard";
 import { SpeedometerCard } from "./components/SpeedometerCard";
 
@@ -27,9 +27,9 @@ export default function DashboardPage() {
   return (
     <>
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h1
-          className="text-3xl sm:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2"
+          className="text-3xl sm:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1"
           style={{ fontFamily: "var(--font-cinzel), serif" }}
         >
           Dashboard
@@ -127,23 +127,23 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Performance Indicators - Speedometers */}
+      {/* Personal Key Performance Indicators - Speedometers */}
       <div className="mb-8">
         <div className="mb-6">
           <h2
             className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2"
             style={{ fontFamily: "var(--font-cinzel), serif" }}
           >
-            Document Processing Performance
+            Personal Key Performance Indicator
           </h2>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Monitor document management efficiency
+            Your performance metrics assessed by the system
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <SpeedometerCard
-            title="Processing Efficiency"
-            value={89}
+            title="Productivity Score"
+            value={87}
             icon={
               <svg
                 className="w-5 h-5"
@@ -159,12 +159,12 @@ export default function DashboardPage() {
                 />
               </svg>
             }
-            subtitle="Documents processed"
+            subtitle="Task completion rate"
             color="green"
           />
           <SpeedometerCard
-            title="Document Accuracy"
-            value={94}
+            title="Quality Score"
+            value={92}
             icon={
               <svg
                 className="w-5 h-5"
@@ -180,12 +180,12 @@ export default function DashboardPage() {
                 />
               </svg>
             }
-            subtitle="Error-free rate"
+            subtitle="Work accuracy rate"
             color="blue"
           />
           <SpeedometerCard
-            title="Review Completion"
-            value={76}
+            title="Timeliness Score"
+            value={81}
             icon={
               <svg
                 className="w-5 h-5"
@@ -197,16 +197,16 @@ export default function DashboardPage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
             }
-            subtitle="On-time reviews"
+            subtitle="On-time completion"
             color="orange"
           />
           <SpeedometerCard
-            title="Archive Compliance"
-            value={91}
+            title="Compliance Score"
+            value={95}
             icon={
               <svg
                 className="w-5 h-5"
@@ -218,11 +218,11 @@ export default function DashboardPage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                 />
               </svg>
             }
-            subtitle="Proper archiving"
+            subtitle="Policy adherence"
             color="green"
           />
         </div>
@@ -230,9 +230,9 @@ export default function DashboardPage() {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Document Activity - Takes 2 columns on large screens */}
+        {/* Login Trail - Takes 2 columns on large screens */}
         <div className="lg:col-span-2">
-          <DocumentActivity />
+          <LoginTrail />
         </div>
 
         {/* Stats Cards - Takes 1 column on large screens */}

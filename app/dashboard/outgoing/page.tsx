@@ -40,28 +40,16 @@ export default function OutgoingPage() {
   const handleAddCategory = () => {
     if (newCategory.name.trim() === "") return;
 
-    const categoryIcon = (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-        />
-      </svg>
-    );
+    // Use default document icon URL
+    const defaultIconUrl =
+      "https://www.thiings.co/_next/image?url=https%3A%2F%2Flftz25oez4aqbxpq.public.blob.vercel-storage.com%2Fimage-Kxv9xKKFv7t6qa6ee6DvtUeB4OkhrG.png&w=1000&q=75";
 
     const newCategoryCard: CategoryCard = {
       id: `new-${Date.now()}`,
       name: newCategory.name,
       description: newCategory.description,
       count: newCategory.count,
-      icon: categoryIcon,
+      icon: defaultIconUrl,
     };
 
     setLocalCategories([...localCategories, newCategoryCard]);
@@ -76,9 +64,9 @@ export default function OutgoingPage() {
   return (
     <>
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h1
-          className="text-3xl sm:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2"
+          className="text-3xl sm:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1"
           style={{ fontFamily: "var(--font-cinzel), serif" }}
         >
           Outgoing Documents
@@ -143,63 +131,29 @@ export default function OutgoingPage() {
           <Link
             key={category.id}
             href={`/dashboard/outgoing/${category.id}`}
-            className="
-              bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6
-              transition-all duration-200 cursor-pointer
-              hover:shadow-lg hover:scale-[1.02]
-              group aspect-square flex flex-col
-            "
+            className="group bg-white dark:bg-zinc-900 rounded-xl border-2 border-zinc-200 dark:border-zinc-800 p-8 hover:shadow-xl transition-all cursor-pointer"
+            style={{
+              borderColor: accentColorValue + "40",
+            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = accentColorValue;
-              e.currentTarget.style.backgroundColor = `${accentColorValue}08`;
+              e.currentTarget.style.transform = "translateY(-4px)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "";
-              e.currentTarget.style.backgroundColor = "";
+              e.currentTarget.style.borderColor = accentColorValue + "40";
+              e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            {/* Icon and Count */}
-            <div className="flex items-start justify-between mb-4 shrink-0">
-              <div
-                className="p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 transition-colors"
-                style={{
-                  backgroundColor: `${accentColorValue}10`,
-                  color: accentColorValue,
-                }}
-              >
-                {category.icon}
-              </div>
-              <div className="text-right">
-                <p
-                  className="text-3xl font-bold mb-1 text-zinc-900 dark:text-zinc-100 transition-colors"
-                  style={{
-                    fontFamily: "var(--font-cinzel), serif",
-                    color: accentColorValue,
-                  }}
-                >
-                  {category.count}
-                </p>
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500">
-                  Documents
-                </p>
-              </div>
+            <div className="aspect-square flex items-center justify-center mb-6 overflow-hidden">
+              <img
+                src={category.icon}
+                alt={category.name}
+                className="w-full h-full object-contain transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+              />
             </div>
-
-            {/* Category Name and Description */}
-            <div className="flex-1 flex flex-col justify-between">
-              <h3
-                className="text-lg font-semibold mb-2 text-zinc-900 dark:text-zinc-100 transition-colors"
-                style={{
-                  fontFamily: "var(--font-cinzel), serif",
-                  color: accentColorValue,
-                }}
-              >
-                {category.name}
-              </h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-3">
-                {category.description}
-              </p>
-            </div>
+            <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 text-center">
+              {category.name}
+            </h3>
           </Link>
         ))}
       </div>

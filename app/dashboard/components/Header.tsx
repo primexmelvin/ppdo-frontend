@@ -21,6 +21,10 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
   const [showAccentColors, setShowAccentColors] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
+  const [showEmails, setShowEmails] = useState(false);
+  const [emailCount, setEmailCount] = useState(5);
+  const [showDepartmentMenu, setShowDepartmentMenu] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("PPDO");
   const router = useRouter();
   const { isMinimized, toggleMinimize } = useSidebar();
   const { accentColor, setAccentColor, accentColorValue } = useAccentColor();
@@ -31,7 +35,7 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
       setUserEmail(email);
     }
     // Mock user name - in production, this would come from user data/API
-    setUserName("Maria Cristina Santos");
+    setUserName("Tarlac Administrator");
   }, []);
 
   function handleLogout() {
@@ -91,6 +95,275 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
 
           {/* Right section - Actions */}
           <div className="flex items-center gap-3">
+            {/* Department Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowDepartmentMenu(!showDepartmentMenu)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                style={{
+                  borderColor: showDepartmentMenu
+                    ? accentColorValue
+                    : undefined,
+                }}
+              >
+                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {selectedDepartment}
+                </span>
+                <svg
+                  className={`w-4 h-4 text-zinc-600 dark:text-zinc-400 transition-transform ${
+                    showDepartmentMenu ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {/* Department Dropdown Menu */}
+              {showDepartmentMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowDepartmentMenu(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-2xl z-20 overflow-hidden">
+                    <div className="py-2">
+                      {[
+                        {
+                          code: "PPDO",
+                          name: "Provincial Planning and Development Office",
+                        },
+                        {
+                          code: "HRMO",
+                          name: "Human Resources Management Office",
+                        },
+                        { code: "PLO", name: "Provincial Legal Office" },
+                        { code: "TPH", name: "Tarlac Provincial Hospital" },
+                      ].map((dept) => (
+                        <button
+                          key={dept.code}
+                          onClick={() => {
+                            setSelectedDepartment(dept.code);
+                            setShowDepartmentMenu(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                            selectedDepartment === dept.code
+                              ? "text-white"
+                              : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                          }`}
+                          style={
+                            selectedDepartment === dept.code
+                              ? { backgroundColor: accentColorValue }
+                              : {}
+                          }
+                        >
+                          <div className="font-medium">{dept.code}</div>
+                          <div className="text-xs opacity-80">{dept.name}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Mail Icon */}
+            <div className="relative">
+              <button
+                onClick={() => setShowEmails(!showEmails)}
+                className="relative p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                title="Email"
+              >
+                <svg
+                  className="w-8 h-8 text-zinc-600 dark:text-zinc-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                {emailCount > 0 && (
+                  <span
+                    className="absolute top-1 right-1 w-2 h-2 rounded-full"
+                    style={{ backgroundColor: accentColorValue }}
+                  />
+                )}
+                {emailCount > 0 && (
+                  <span
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center"
+                    style={{ backgroundColor: accentColorValue }}
+                  >
+                    {emailCount > 9 ? "9+" : emailCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Email Dropdown */}
+              {showEmails && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowEmails(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-2xl z-20 max-h-[600px] overflow-hidden flex flex-col">
+                    {/* Email Header */}
+                    <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                        Email
+                      </h3>
+                      {emailCount > 0 && (
+                        <button
+                          onClick={() => setEmailCount(0)}
+                          className="text-sm font-medium"
+                          style={{ color: accentColorValue }}
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Email List */}
+                    <div className="flex-1 overflow-y-auto">
+                      {emailCount > 0 ? (
+                        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                          {/* Sample Emails */}
+                          {[
+                            {
+                              id: 1,
+                              from: "provincial.office@tarlac.gov.ph",
+                              subject: "Monthly Report Submission",
+                              preview:
+                                "Please submit the monthly report by end of week...",
+                              time: "2 hours ago",
+                              isRead: false,
+                            },
+                            {
+                              id: 2,
+                              from: "hr@tarlac.gov.ph",
+                              subject: "Staff Meeting Reminder",
+                              preview:
+                                "Reminder: Staff meeting scheduled for tomorrow...",
+                              time: "5 hours ago",
+                              isRead: false,
+                            },
+                            {
+                              id: 3,
+                              from: "finance@tarlac.gov.ph",
+                              subject: "Budget Approval Required",
+                              preview:
+                                "Your department budget request needs approval...",
+                              time: "1 day ago",
+                              isRead: false,
+                            },
+                            {
+                              id: 4,
+                              from: "it@tarlac.gov.ph",
+                              subject: "System Maintenance Notice",
+                              preview:
+                                "Scheduled maintenance this weekend from 10 PM...",
+                              time: "2 days ago",
+                              isRead: true,
+                            },
+                            {
+                              id: 5,
+                              from: "admin@tarlac.gov.ph",
+                              subject: "Policy Update",
+                              preview:
+                                "New office policies have been updated...",
+                              time: "3 days ago",
+                              isRead: true,
+                            },
+                          ].map((email) => (
+                            <div
+                              key={email.id}
+                              className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 cursor-pointer transition-colors"
+                              onClick={() => {
+                                // Handle email click
+                                setShowEmails(false);
+                              }}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className="w-2 h-2 rounded-full mt-2 shrink-0"
+                                  style={{
+                                    backgroundColor: email.isRead
+                                      ? "transparent"
+                                      : accentColorValue,
+                                  }}
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                                    {email.from}
+                                  </p>
+                                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mt-1 truncate">
+                                    {email.subject}
+                                  </p>
+                                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 line-clamp-2">
+                                    {email.preview}
+                                  </p>
+                                  <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">
+                                    {email.time}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="p-8 text-center">
+                          <svg
+                            className="w-12 h-12 mx-auto mb-3 text-zinc-400 dark:text-zinc-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            />
+                          </svg>
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                            No new emails
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* View All Emails Button */}
+                    <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
+                      <button
+                        className="w-full py-2 px-4 rounded-lg font-medium transition-all hover:shadow-md text-center"
+                        style={{
+                          backgroundColor: accentColorValue,
+                          color: "white",
+                        }}
+                        onClick={() => {
+                          setShowEmails(false);
+                          router.push("/mail");
+                        }}
+                      >
+                        View All Emails
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
             {/* Notification Bell */}
             <div className="relative">
               <button
@@ -352,7 +625,7 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                                 className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-left"
                               >
                                 <div
-                                  className="w-4 h-4 rounded-full flex-shrink-0"
+                                  className="w-4 h-4 rounded-full shrink-0"
                                   style={{ backgroundColor: colorValue }}
                                 />
                                 <span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300 capitalize">
@@ -360,7 +633,7 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                                 </span>
                                 {isSelected && (
                                   <svg
-                                    className="w-4 h-4 flex-shrink-0"
+                                    className="w-4 h-4 shrink-0"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"

@@ -62,7 +62,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
 
   return (
     <nav
-      className="flex items-center gap-2 text-sm mb-4 sm:mb-6"
+      className="flex items-center gap-2 text-sm mb-2 sm:mb-3"
       aria-label="Breadcrumb"
     >
       <ol className="flex items-center gap-2 flex-wrap">
