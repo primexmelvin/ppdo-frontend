@@ -43,6 +43,25 @@ const defaultNavItems: NavItem[] = [
     ),
   },
   {
+    name: "Personal KPI",
+    href: "/dashboard/personal-kpi",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+        />
+      </svg>
+    ),
+  },
+  {
     name: "Incoming",
     href: "/dashboard/incoming",
     icon: (
@@ -95,6 +114,25 @@ const defaultNavItems: NavItem[] = [
           strokeLinejoin="round"
           strokeWidth={2}
           d="M4 6h16M4 10h16M4 14h16M4 18h16"
+        />
+      </svg>
+    ),
+  },
+  {
+    name: "CMS",
+    href: "/dashboard/cms",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
         />
       </svg>
     ),
@@ -213,28 +251,30 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
         `}
       >
         {/* Sidebar Header */}
-        <div className="h-16 px-4 sm:px-6 py-4 flex items-center justify-center border-b border-zinc-200 dark:border-zinc-800 relative">
+        <div className="min-h-20 px-4 sm:px-6 py-4 flex items-center justify-center border-b border-zinc-200 dark:border-zinc-800 relative">
           {/* Logo and text - hidden when minimized */}
           <div
-            className={`flex items-center gap-1 transition-opacity duration-300 ${
+            className={`flex flex-col items-center gap-2 transition-opacity duration-300 ${
               isMinimized
                 ? "md:opacity-0 md:absolute md:pointer-events-none"
                 : ""
             }`}
           >
-            <img
-              src="/logo.png"
-              alt="Logo"
-              className="h-12 object-contain shrink-0"
-            />
-            <img
-              src="/y.png"
-              alt="Y Logo"
-              className="h-12 object-contain shrink-0"
-            />
-            <div className="flex flex-col ml-1 leading-tight">
-              <h2 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm leading-tight">
-                PGO System
+            <div className="flex items-center gap-1">
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="h-16 object-contain shrink-0"
+              />
+              <img
+                src="/y.png"
+                alt="Y Logo"
+                className="h-16 object-contain shrink-0"
+              />
+            </div>
+            <div className="flex flex-col items-center leading-tight">
+              <h2 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm leading-tight text-center">
+                Provincial Governor's Office
               </h2>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-tight">
                 Tarlac
@@ -253,7 +293,7 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
             <img
               src="/logo.png"
               alt="Tarlac Provincial Government Logo"
-              className="h-16 w-16 object-contain"
+              className="h-20 w-20 object-contain"
             />
           </div>
 

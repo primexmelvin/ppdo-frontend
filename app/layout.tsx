@@ -17,16 +17,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "The Tarlac Chronicle | Local News & Community Stories",
+  title: "Provincial Governor's Office ",
   description:
     "Your trusted source for local news, stories, and community updates in Tarlac",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={`${cinzel.variable} ${inter.variable} antialiased`}>
