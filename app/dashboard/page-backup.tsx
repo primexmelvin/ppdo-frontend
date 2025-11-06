@@ -89,7 +89,6 @@ export default function DashboardPage() {
     <DashboardGrid
       systems={SYSTEMS}
       onCardClick={handleCardClick}
-      onLogout={handleLogout}
     />
   );
 }

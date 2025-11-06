@@ -54,43 +54,48 @@ export default function OfficeDetailPage() {
           throw new Error(`Failed to fetch data: ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const responseData = await response.json();
 
         // Debug: Log the API response structure
-        console.log("API Response:", data);
-        if (Array.isArray(data) && data.length > 0) {
-          console.log("Sample item structure:", data[0]);
+        console.log("API Response:", responseData);
+
+        // HRMO API returns: { success: true, count: number, data: [...] }
+        // Handle both wrapped format and direct array format
+        let items: any[] = [];
+        
+        if (Array.isArray(responseData)) {
+          // Direct array response
+          items = responseData;
+        } else if (responseData?.data && Array.isArray(responseData.data)) {
+          // Wrapped response with { success, count, data }
+          items = responseData.data;
+        } else if (responseData?.success === false) {
+          // API returned error in response body
+          throw new Error(responseData.error || "API returned an error");
+        }
+
+        if (items.length > 0) {
+          console.log("Sample item structure:", items[0]);
         }
 
         // Transform API response to table format
-        // Adjust this mapping based on your actual API response structure
-        const transformedData: TableRow[] = Array.isArray(data)
-          ? data.map((item: any) => ({
-              id: item.id || item._id || item.code || "N/A",
-              title: item.title || item.name || "Untitled",
-              type: item.type || item.category || "Unknown",
-              sector: item.sector || item.area || "General",
-              percentage:
-                item.percentComplete ||
-                item.percentage ||
-                item.progress ||
-                item.completion ||
-                0,
-            }))
-          : data.data
-          ? data.data.map((item: any) => ({
-              id: item.id || item._id || item.code || "N/A",
-              title: item.title || item.name || "Untitled",
-              type: item.type || item.category || "Unknown",
-              sector: item.sector || item.area || "General",
-              percentage:
-                item.percentComplete ||
-                item.percentage ||
-                item.progress ||
-                item.completion ||
-                0,
-            }))
-          : [];
+        // HRMO API fields: id, title, type, sector, status, owner, percentComplete
+        const transformedData: TableRow[] = items.map((item: any) => ({
+          id: item.id || item._id || item.code || "N/A",
+          title: item.title || item.name || "Untitled",
+          type: item.type || item.category || "Unknown",
+          sector: item.sector || item.area || "General",
+          percentage:
+            item.percentComplete !== undefined
+              ? item.percentComplete
+              : item.percentage !== undefined
+              ? item.percentage
+              : item.progress !== undefined
+              ? item.progress
+              : item.completion !== undefined
+              ? item.completion
+              : 0,
+        }));
 
         setTableData(transformedData);
       } catch (err: any) {

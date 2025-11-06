@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization to avoid build-time errors when API key is missing
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error("OpenAI API key not configured");
+  }
+  return new OpenAI({ apiKey });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +20,8 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    const openai = getOpenAIClient();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(

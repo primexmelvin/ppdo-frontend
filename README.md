@@ -25,7 +25,7 @@ MONGODB_URI=mongodb://localhost:27017
 MONGODB_DB=ppdo
 
 # HRMO External API URL (for HRMO office data)
-NEXT_PUBLIC_HRMO_API_URL=https://hrmo.netlify.app
+NEXT_PUBLIC_HRMO_API_URL=https://hrmo-tarlac.netlify.app
 
 # OpenAI API Key (for AI Assistant)
 OPENAI_API_KEY=your_openai_api_key_here

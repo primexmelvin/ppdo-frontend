@@ -6,7 +6,15 @@ import { cn } from "@/lib/utils";
 
 // Define the properties for the ProductHighlightCard component
 interface ProductHighlightCardProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    | "onDrag"
+    | "onDragStart"
+    | "onDragEnd"
+    | "onAnimationStart"
+    | "onAnimationEnd"
+    | "onAnimationIteration"
+  > {
   categoryIcon: React.ReactNode;
   title: string;
   description: string;
