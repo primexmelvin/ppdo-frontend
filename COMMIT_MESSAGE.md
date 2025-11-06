@@ -1,76 +1,184 @@
-feat: enhance dashboard UI with improved navigation, time/location display, and table features
+feat: major dashboard redesign with office management system and MongoDB integration
 
-This commit introduces several major UI/UX improvements to the dashboard application:
+This commit introduces a comprehensive dashboard redesign with office management functionality, MongoDB database integration, and external API connectivity for HRMO office data.
 
-## UI/UX Enhancements
+## Major Features
 
-### Header Improvements
-- **Move theme toggle to profile dropdown**: Relocated the theme toggle from the header to the user profile dropdown menu for a cleaner header interface
-- **Replace email with full name in welcome message**: Updated "Welcome back" message to display user's full name (currently using mock data "Maria Cristina Santos") instead of email address
-- **Reorganize header layout**: Simplified header structure with welcome message on left and action buttons on right
+### Dashboard Layout Redesign
 
-### Navigation & Layout
-- **Create reusable TimeLocation component**: Extracted time and location display into a standalone component (`TimeLocation.tsx`) for better maintainability
-- **Reposition time/location display**: Moved time and location from header to main content area, positioned on the right side opposite breadcrumbs for better visual balance
-- **Remove back button from FB Pages**: Removed "Back to Accounts" button from individual Facebook page messenger interfaces, relying on breadcrumbs for navigation
+- **Restructured main dashboard grid**: Reorganized from 2-column to 3-column layout (3-6-3 grid)
+  - Left column: Client Satisfaction Rating, Office Selection, SGLG Data
+  - Middle column: Physical & Financial Accomplishment bar charts
+  - Right column: Overall Completion Rate & Utilization Rate gauges
+- **Status of Mandatory Fund card**: Spans full width (12 columns) below main section with responsive grid layout
+- **Repositioned key components**: Moved Overall Performance Score and Login Trail below main dashboard section
+- **Added banner image**: Integrated external banner image with proper Next.js Image optimization
 
-## Table Enhancements
+### Office Management System
 
-### Category Tables (Incoming & Outgoing)
-- **Add row numbering column**: Introduced "No." column as the first column in category tables showing sequential row numbers based on pagination
-- **Implement comprehensive pagination system**:
-  - Added pagination state management with configurable items per page (5, 10, 25, 50)
-  - Implemented page navigation with Previous/Next buttons
-  - Added dynamic page number buttons (displays up to 5 pages with smart positioning)
-  - Auto-reset to page 1 when filters, search, or sorting changes
-  - Enhanced footer with range display (e.g., "Showing 1-10 of 50 documents")
-  - Added items-per-page selector dropdown
-  
-- **Add delete functionality**:
-  - Implemented delete icon/button in each table row's Actions column
-  - Added two-step confirmation (click delete → show Confirm/Cancel buttons)
-  - Integrated delete functionality that updates state immediately
-  - Works seamlessly with filtering, sorting, and pagination
+- **Windows-style folder gallery**: Created office listing page (`/dashboard/office`) with:
+  - 28 official provincial offices displayed as Windows-style folder icons
+  - Responsive grid layout (2-6 columns based on screen size)
+  - Hover effects and visual feedback
+- **Office selection component**: Searchable combobox with:
+  - Real-time filtering by office name or code
+  - Recent selections (top 5) persisted in localStorage
+  - Clear button and collapsible list
+- **Office detail pages**: Individual office pages (`/dashboard/office/[code]`) with:
+  - Summary cards (Total, Approved, In Review, Draft)
+  - Search and filter functionality (Type, Sector)
+  - Data table with ID, Title, Type, Sector, Percentage columns
+  - View-only actions (no edit/delete)
+  - Pagination controls
+- **External API integration**: HRMO office connected to external API:
+  - Proxy route `/api/ppdo/external/ppe` for CORS handling
+  - Environment variable `NEXT_PUBLIC_HRMO_API_URL` for deployment
+  - Data transformation with fallback field mapping
+  - Loading and error states
+
+### New Components
+
+- **BarChartCard**: Horizontal bar chart component for physical/financial accomplishments
+- **MiniGauge**: Compact half-circle gauge for status indicators
+- **OfficeSelect**: Searchable combobox for office selection with recent items
+- **Office detail page**: Complete table view with filtering and search
+
+### MongoDB Integration
+
+- **Database connection utility**: Created `lib/mongodb.ts` with:
+  - Serverless-safe connection pooling (reuses connections in dev)
+  - Database helper functions (`getDb()`, `closeConnection()`)
+  - Proper error handling and environment variable validation
+- **API endpoints**:
+  - `/api/test-db`: Connection test endpoint
+  - `/api/offices`: CRUD operations for offices (GET, POST)
+  - `/api/ppdo/external/ppe`: Proxy for external HRMO API
+- **Environment configuration**: Added MongoDB URI and database name to `.env.local`
+
+### Sidebar Updates
+
+- **Cross Department section**: Consolidated multiple office links into single "Office" menu item
+- **Navigation**: Office menu item links to `/dashboard/office` gallery page
+
+### Data Visualization
+
+- **Gauge charts**: Overall Completion Rate and Utilization Rate with speedometer-style visualization
+- **Bar charts**: Physical and Financial Accomplishment by office with responsive design
+- **Status blocks**: Mandatory fund status with mini gauges for LDF, MDRRMF, GAD, Trust Fund
+- **SGLG Data**: Compliance metrics with mini gauges and revenue growth display
+- **Client Satisfaction**: Large percentage display card
+
+### Dashboard Data Integration
+
+- **Office selection filtering**: Dashboard charts and gauges update based on selected office
+- **Dynamic metrics**: Completion rate, utilization rate, and accomplishment data change per office
+- **Responsive height matching**: Physical and Financial charts match gauge card heights (min-h-[315px])
 
 ## Technical Improvements
 
-### Component Architecture
-- Extracted static data into separate files (`data.ts`/`data.tsx`) for incoming and outgoing categories
-- Improved component organization and separation of concerns
-- Enhanced responsive design with mobile-first approach
+### Build Fixes
 
-### State Management
-- Converted documents from `useMemo` to `useState` to support deletion operations
-- Added proper state management for pagination across multiple pages
-- Improved state synchronization between filters, search, and pagination
+- **Fixed import paths**: Corrected relative imports for `FinancialBreakdownItem` type across budget components
+- **Fixed ref callbacks**: Updated ref assignments to return void instead of value (TypeScript compliance)
+- **TypeScript errors**: Resolved all compilation errors for production build
 
-## Files Changed
+### Code Quality
 
-### New Files
-- `app/dashboard/components/TimeLocation.tsx` - Reusable time and location component
-- `app/dashboard/incoming/data.tsx` - Static data for incoming categories
-- `app/dashboard/outgoing/data.ts` - Static data for outgoing categories
-- `app/dashboard/incoming/[categoryId]/page.tsx` - Dynamic route for incoming category pages
-- `app/dashboard/outgoing/[categoryId]/page.tsx` - Dynamic route for outgoing category pages
-- `app/dashboard/orm/fb-pages/[accountId]/page.tsx` - Dynamic route for FB account messenger
-- `app/dashboard/orm/econcern/page.tsx` - E-Concern submenu page
+- **Mobile-first design**: All new components follow responsive design principles
+- **Accent color integration**: Buttons and UI elements use global accent color system
+- **Error handling**: Comprehensive error states and loading indicators
+- **Type safety**: Proper TypeScript interfaces and type definitions
 
-### Modified Files
-- `app/dashboard/components/Header.tsx` - Header reorganization, theme toggle removal, welcome message update
-- `app/dashboard/components/Sidebar.tsx` - Theme toggle integration (removed from header)
-- `app/dashboard/layout.tsx` - TimeLocation component integration, layout adjustments
-- `app/dashboard/incoming/page.tsx` - Navigation updates, data extraction
-- `app/dashboard/outgoing/page.tsx` - Navigation updates, data extraction
-- `app/dashboard/orm/fb-pages/[accountId]/page.tsx` - Removed back button
+### Configuration
 
-## User Experience Impact
+- **Next.js config**: Updated image domains for external banner images
+- **Environment variables**: Added `NEXT_PUBLIC_HRMO_API_URL` for external API connection
+- **MongoDB setup**: Connection string and database name configuration
 
-- **Improved Navigation**: Time/location and breadcrumbs positioned for better visual hierarchy
-- **Enhanced Data Management**: Row numbers and pagination make large datasets more manageable
-- **Better Information Density**: Tables can now handle more data with pagination
-- **Streamlined Actions**: Delete functionality with confirmation prevents accidental deletions
-- **Cleaner Header**: Reduced header clutter improves focus on main content
-- **Consistent Experience**: All category tables now have uniform features and behavior
+## Files Added
+
+### New Components
+
+- `app/dashboard/components/BarChartCard.tsx` - Bar chart visualization component
+- `app/dashboard/components/MiniGauge.tsx` - Compact gauge component
+- `app/dashboard/components/OfficeSelect.tsx` - Searchable office selection combobox
+
+### New Pages
+
+- `app/dashboard/office/page.tsx` - Office gallery with Windows-style folders
+- `app/dashboard/office/[code]/page.tsx` - Individual office detail page with data table
+
+### API Routes
+
+- `app/api/test-db/route.ts` - MongoDB connection test endpoint
+- `app/api/offices/route.ts` - Office CRUD operations
+- `app/api/ppdo/external/ppe/route.ts` - External HRMO API proxy
+
+### Utilities
+
+- `lib/mongodb.ts` - MongoDB connection utility with Next.js serverless support
+
+## Files Modified
+
+### Dashboard
+
+- `app/dashboard/page.tsx` - Complete layout restructure, added gauges/charts/status blocks
+- `app/dashboard/components/Sidebar.tsx` - Updated Office menu item
+- `app/dashboard/components/PersonalKPICard.tsx` - Position adjustments
+- `app/dashboard/components/SpeedometerCard.tsx` - Integration in main dashboard
+
+### Budget Components
+
+- `app/dashboard/budget/[particularId]/[projectId]/components/FinancialBreakdownItemForm.tsx` - Fixed import path
+- `app/dashboard/budget/[particularId]/[projectId]/components/FinancialBreakdownTable.tsx` - Fixed import path and ref callback
+- `app/dashboard/budget/[particularId]/[projectId]/data.ts` - Fixed import path
+- `app/dashboard/budget/[particularId]/[projectId]/utils.ts` - Fixed import path
+- `app/dashboard/budget/[particularId]/components/ProjectsTable.tsx` - Fixed ref callback
+- `app/dashboard/budget/components/BudgetTrackingTable.tsx` - Fixed ref callback
+
+### Configuration
+
+- `next.config.ts` - Added image domains for external images
+- `README.md` - Updated with MongoDB setup and HRMO API configuration
+- `package.json` - MongoDB driver already present
+
+## Environment Variables Required
+
+```bash
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DB=ppdo
+
+# External APIs
+NEXT_PUBLIC_HRMO_API_URL=https://hrmo.netlify.app
+
+# OpenAI (existing)
+OPENAI_API_KEY=your_key_here
+```
 
 ## Breaking Changes
-None - all changes are backward compatible and enhance existing functionality.
+
+- Removed old incoming/outgoing/orm modules (cleanup)
+- Dashboard layout structure changed (requires UI review)
+- Office selection now affects dashboard data (previously static)
+
+## Migration Notes
+
+- Ensure MongoDB is running or Atlas connection string is configured
+- Set `NEXT_PUBLIC_HRMO_API_URL` environment variable for production
+- Office data will be fetched from MongoDB or external API depending on office code
+
+## Performance Considerations
+
+- MongoDB connection pooling optimized for Next.js serverless functions
+- External API calls proxied through Next.js to avoid CORS issues
+- Image optimization with Next.js Image component
+- Responsive grid layouts reduce layout shifts
+
+## Testing Recommendations
+
+- Test office selection filtering on dashboard
+- Verify MongoDB connection with `/api/test-db` endpoint
+- Test HRMO office page with external API connectivity
+- Verify responsive layouts on mobile devices
+- Check gauge and chart rendering with different data values

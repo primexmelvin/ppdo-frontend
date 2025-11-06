@@ -33,39 +33,46 @@ export default function LoginPage() {
 
     // Simulate API call - successful login
     setIsLoading(false);
-    
+
     // Store mock session (replace with proper auth)
     localStorage.setItem("authenticated", "true");
     localStorage.setItem("userEmail", email);
-    
+
     // Redirect to dashboard
     router.push("/dashboard");
   }
 
   return (
     <main className="min-h-[100dvh] flex items-center justify-center relative px-4 py-12 overflow-hidden">
-      {/* Background Image */}
+      {/* Grid Background */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `url('https://cdn.prod.website-files.com/68a25157e0edb92947ffe4a2/68af49e2f002d2c50022786b_Story%20Image-min.avif')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `
+            linear-gradient(to right, rgba(34, 197, 94, 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(34, 197, 94, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
         }}
       ></div>
-      
+
       {/* Dark overlay for better readability */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/50 via-black/60 to-zinc-950/50"></div>
-      
+
       <div className="w-full max-w-md relative z-10">
         <div className="bg-gradient-to-br from-[#16a34a]/20 via-[#16a34a]/10 to-[#16a34a]/20 rounded-3xl border border-[#16a34a]/30 p-8 sm:p-12 shadow-xl backdrop-blur-sm">
           {/* Logo/Title */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#16a34a] mb-2" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}>
+            <h1
+              className="text-3xl sm:text-4xl font-bold text-[#16a34a] mb-2"
+              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}
+            >
               Welcome Back
             </h1>
-            <p className="text-[#16a34a]/80" style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.25)" }}>
+            <p
+              className="text-[#16a34a]/80"
+              style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.25)" }}
+            >
               Sign in to your account to continue
             </p>
           </div>
@@ -155,9 +162,7 @@ export default function LoginPage() {
           <div className="mt-8 pt-8 border-t border-[#16a34a]/30">
             <p className="text-center text-sm text-[#16a34a]/80">
               Don't have an account?{" "}
-              <span className="text-[#16a34a]/60">
-                Contact administrator
-              </span>
+              <span className="text-[#16a34a]/60">Contact administrator</span>
             </p>
           </div>
         </div>
@@ -165,4 +170,3 @@ export default function LoginPage() {
     </main>
   );
 }
-

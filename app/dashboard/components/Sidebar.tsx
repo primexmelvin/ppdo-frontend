@@ -16,16 +16,56 @@ interface NavItem {
   href?: string;
   icon: React.ReactNode;
   submenu?: SubMenuItem[];
+  category?: string;
+  disabled?: boolean;
+}
+
+interface NavCategory {
+  name: string;
+  items: NavItem[];
 }
 
 interface SidebarProps {
   navItems?: NavItem[];
 }
 
+// Helper function to group items by category
+function groupItemsByCategory(items: NavItem[]): NavCategory[] {
+  const categories: { [key: string]: NavItem[] } = {};
+
+  items.forEach((item) => {
+    const category = item.category || "Uncategorized";
+    if (!categories[category]) {
+      categories[category] = [];
+    }
+    categories[category].push(item);
+  });
+
+  // Define category order
+  const categoryOrder = [
+    "My Workspace",
+    "Department",
+    "Cross Department",
+    "Control Panel",
+  ];
+
+  // Categories that should always be shown even if empty
+  const alwaysShowCategories = ["Department", "Cross Department"];
+
+  return categoryOrder
+    .filter((cat) => categories[cat] || alwaysShowCategories.includes(cat))
+    .map((cat) => ({
+      name: cat,
+      items: categories[cat] || [],
+    }));
+}
+
 const defaultNavItems: NavItem[] = [
+  // My Workspace
   {
     name: "Dashboard",
     href: "/dashboard",
+    category: "My Workspace",
     icon: (
       <svg
         className="w-5 h-5"
@@ -45,6 +85,7 @@ const defaultNavItems: NavItem[] = [
   {
     name: "Personal KPI",
     href: "/dashboard/personal-kpi",
+    category: "My Workspace",
     icon: (
       <svg
         className="w-5 h-5"
@@ -62,8 +103,9 @@ const defaultNavItems: NavItem[] = [
     ),
   },
   {
-    name: "Incoming",
-    href: "/dashboard/incoming",
+    name: "Projects",
+    href: "/dashboard/budget",
+    category: "Department",
     icon: (
       <svg
         className="w-5 h-5"
@@ -75,14 +117,16 @@ const defaultNavItems: NavItem[] = [
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
         />
       </svg>
     ),
   },
+  // Cross Department
   {
-    name: "Outgoing",
-    href: "/dashboard/outgoing",
+    name: "Office",
+    href: "/dashboard/office",
+    category: "Cross Department",
     icon: (
       <svg
         className="w-5 h-5"
@@ -94,33 +138,16 @@ const defaultNavItems: NavItem[] = [
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"
+          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
         />
       </svg>
     ),
   },
-  {
-    name: "Queue",
-    href: "/dashboard/queue",
-    icon: (
-      <svg
-        className="w-5 h-5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M4 6h16M4 10h16M4 14h16M4 18h16"
-        />
-      </svg>
-    ),
-  },
+  // Control Panel
   {
     name: "CMS",
-    href: "/dashboard/cms",
+    category: "Control Panel",
+    disabled: true,
     icon: (
       <svg
         className="w-5 h-5"
@@ -138,39 +165,8 @@ const defaultNavItems: NavItem[] = [
     ),
   },
   {
-    name: "ORM",
-    icon: (
-      <svg
-        className="w-5 h-5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-        />
-      </svg>
-    ),
-    submenu: [
-      {
-        name: "FB Pages",
-        href: "/dashboard/orm/fb-pages",
-      },
-      {
-        name: "Contact",
-        href: "/dashboard/orm/contact",
-      },
-      {
-        name: "E-Concern",
-        href: "/dashboard/orm/econcern",
-      },
-    ],
-  },
-  {
     name: "Settings",
+    category: "Control Panel",
     icon: (
       <svg
         className="w-5 h-5"
@@ -210,6 +206,9 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
   const { accentColorValue } = useAccentColor();
   // Track which submenu is expanded
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  // Group items by category
+  const groupedCategories = groupItemsByCategory(navItems);
 
   // Auto-expand submenu if one of its items is active
   useEffect(() => {
@@ -274,7 +273,7 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
             </div>
             <div className="flex flex-col items-center leading-tight">
               <h2 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm leading-tight text-center">
-                Provincial Governor's Office
+                Provincial Planning and Development Office
               </h2>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-tight">
                 Tarlac
@@ -320,34 +319,48 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4">
-          <ul className="space-y-2">
-            {navItems.map((item, index) => {
-              const hasSubmenu = item.submenu && item.submenu.length > 0;
-              const itemKey = item.href || `nav-item-${index}`;
-              const isExpanded = expandedItems.has(itemKey);
-              const isActive = item.href
-                ? pathname === item.href
-                : item.submenu?.some((sub) => pathname === sub.href);
+          <div className="space-y-6">
+            {groupedCategories.map((category) => (
+              <div key={category.name} className="space-y-2">
+                {/* Category Header */}
+                {!isMinimized && (
+                  <div className="px-3 py-2">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                      {category.name}
+                    </h3>
+                  </div>
+                )}
+                {/* Category Items */}
+                <ul className="space-y-2">
+                  {category.items.map((item, itemIndex) => {
+                    const hasSubmenu = item.submenu && item.submenu.length > 0;
+                    const itemKey =
+                      item.href || `nav-item-${category.name}-${itemIndex}`;
+                    const isExpanded = expandedItems.has(itemKey);
+                    const isActive = item.href
+                      ? pathname === item.href
+                      : item.submenu?.some((sub) => pathname === sub.href);
 
-              return (
-                <li key={itemKey}>
-                  {hasSubmenu ? (
-                    <>
-                      {/* Parent menu item with expand/collapse */}
-                      <button
-                        onClick={() => {
-                          if (isMinimized) return;
-                          setExpandedItems((prev) => {
-                            const newSet = new Set(prev);
-                            if (newSet.has(itemKey)) {
-                              newSet.delete(itemKey);
-                            } else {
-                              newSet.add(itemKey);
-                            }
-                            return newSet;
-                          });
-                        }}
-                        className={`
+                    return (
+                      <li key={itemKey}>
+                        {hasSubmenu ? (
+                          <>
+                            {/* Parent menu item with expand/collapse */}
+                            <button
+                              onClick={() => {
+                                if (isMinimized || item.disabled) return;
+                                setExpandedItems((prev) => {
+                                  const newSet = new Set(prev);
+                                  if (newSet.has(itemKey)) {
+                                    newSet.delete(itemKey);
+                                  } else {
+                                    newSet.add(itemKey);
+                                  }
+                                  return newSet;
+                                });
+                              }}
+                              disabled={item.disabled}
+                              className={`
                           w-full flex items-center rounded-xl
                           transition-all duration-200 group
                           ${
@@ -356,67 +369,71 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
                               : "gap-3 px-4 py-3 justify-between"
                           }
                           ${
-                            isActive
+                            item.disabled
+                              ? "cursor-not-allowed text-zinc-700 dark:text-zinc-300"
+                              : isActive
                               ? "font-medium"
                               : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                           }
                         `}
-                        style={
-                          isActive
-                            ? {
-                                backgroundColor: `${accentColorValue}10`,
-                                color: accentColorValue,
+                              style={
+                                isActive
+                                  ? {
+                                      backgroundColor: `${accentColorValue}10`,
+                                      color: accentColorValue,
+                                    }
+                                  : undefined
                               }
-                            : undefined
-                        }
-                        title={isMinimized ? item.name : undefined}
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <span
-                            className={isMinimized ? "shrink-0" : ""}
-                            style={
-                              isActive ? { color: accentColorValue } : undefined
-                            }
-                          >
-                            {item.icon}
-                          </span>
-                          <span
-                            className={`
+                              title={isMinimized ? item.name : undefined}
+                            >
+                              <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <span
+                                  className={isMinimized ? "shrink-0" : ""}
+                                  style={
+                                    isActive
+                                      ? { color: accentColorValue }
+                                      : undefined
+                                  }
+                                >
+                                  {item.icon}
+                                </span>
+                                <span
+                                  className={`
                               transition-all duration-300 whitespace-nowrap
                               ${isMinimized ? "md:hidden" : ""}
                             `}
-                          >
-                            {item.name}
-                          </span>
-                        </div>
-                        {!isMinimized && (
-                          <svg
-                            className={`w-4 h-4 transition-transform duration-200 shrink-0 ${
-                              isExpanded ? "rotate-180" : ""
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                      {/* Submenu items */}
-                      {!isMinimized && isExpanded && item.submenu && (
-                        <ul className="ml-4 mt-1 space-y-1 border-l-2 border-zinc-200 dark:border-zinc-800 pl-4">
-                          {item.submenu.map((subItem) => {
-                            const isSubActive = pathname === subItem.href;
-                            return (
-                              <li key={subItem.href}>
-                                <Link
-                                  href={subItem.href}
-                                  className={`
+                                >
+                                  {item.name}
+                                </span>
+                              </div>
+                              {!isMinimized && (
+                                <svg
+                                  className={`w-4 h-4 transition-transform duration-200 shrink-0 ${
+                                    isExpanded ? "rotate-180" : ""
+                                  }`}
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              )}
+                            </button>
+                            {/* Submenu items */}
+                            {!isMinimized && isExpanded && item.submenu && (
+                              <ul className="ml-4 mt-1 space-y-1 border-l-2 border-zinc-200 dark:border-zinc-800 pl-4">
+                                {item.submenu.map((subItem) => {
+                                  const isSubActive = pathname === subItem.href;
+                                  return (
+                                    <li key={subItem.href}>
+                                      <Link
+                                        href={subItem.href}
+                                        className={`
                                     flex items-center gap-2 px-3 py-2 rounded-lg
                                     transition-all duration-200
                                     ${
@@ -425,40 +442,71 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
                                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                                     }
                                   `}
-                                  style={
-                                    isSubActive
-                                      ? {
-                                          backgroundColor: `${accentColorValue}10`,
-                                          color: accentColorValue,
+                                        style={
+                                          isSubActive
+                                            ? {
+                                                backgroundColor: `${accentColorValue}10`,
+                                                color: accentColorValue,
+                                              }
+                                            : undefined
                                         }
-                                      : undefined
-                                  }
-                                >
-                                  <span
-                                    className={`w-1.5 h-1.5 rounded-full ${
-                                      isSubActive
-                                        ? ""
-                                        : "bg-zinc-400 dark:bg-zinc-600"
-                                    }`}
-                                    style={
-                                      isSubActive
-                                        ? { backgroundColor: accentColorValue }
-                                        : undefined
-                                    }
-                                  />
-                                  <span>{subItem.name}</span>
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
-                    </>
-                  ) : (
-                    /* Regular menu item */
-                    <Link
-                      href={item.href || "#"}
-                      className={`
+                                      >
+                                        <span
+                                          className={`w-1.5 h-1.5 rounded-full ${
+                                            isSubActive
+                                              ? ""
+                                              : "bg-zinc-400 dark:bg-zinc-600"
+                                          }`}
+                                          style={
+                                            isSubActive
+                                              ? {
+                                                  backgroundColor:
+                                                    accentColorValue,
+                                                }
+                                              : undefined
+                                          }
+                                        />
+                                        <span>{subItem.name}</span>
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            )}
+                          </>
+                        ) : item.disabled ? (
+                          /* Disabled menu item - looks normal but unclickable */
+                          <div
+                            className={`
+                        flex items-center rounded-xl
+                        transition-all duration-200
+                        ${
+                          isMinimized
+                            ? "md:justify-center md:px-3 md:py-3"
+                            : "gap-3 px-4 py-3"
+                        }
+                        cursor-not-allowed text-zinc-700 dark:text-zinc-300
+                      `}
+                            title={isMinimized ? item.name : "Coming soon"}
+                            onClick={(e) => e.preventDefault()}
+                          >
+                            <span className={isMinimized ? "shrink-0" : ""}>
+                              {item.icon}
+                            </span>
+                            <span
+                              className={`
+                          transition-all duration-300 whitespace-nowrap
+                          ${isMinimized ? "md:hidden" : ""}
+                        `}
+                            >
+                              {item.name}
+                            </span>
+                          </div>
+                        ) : (
+                          /* Regular menu item */
+                          <Link
+                            href={item.href || "#"}
+                            className={`
                         flex items-center rounded-xl
                         transition-all duration-200 group
                         ${
@@ -472,38 +520,43 @@ export function Sidebar({ navItems = defaultNavItems }: SidebarProps) {
                             : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                         }
                       `}
-                      style={
-                        isActive
-                          ? {
-                              backgroundColor: `${accentColorValue}10`,
-                              color: accentColorValue,
+                            style={
+                              isActive
+                                ? {
+                                    backgroundColor: `${accentColorValue}10`,
+                                    color: accentColorValue,
+                                  }
+                                : undefined
                             }
-                          : undefined
-                      }
-                      title={isMinimized ? item.name : undefined}
-                    >
-                      <span
-                        className={isMinimized ? "shrink-0" : ""}
-                        style={
-                          isActive ? { color: accentColorValue } : undefined
-                        }
-                      >
-                        {item.icon}
-                      </span>
-                      <span
-                        className={`
+                            title={isMinimized ? item.name : undefined}
+                          >
+                            <span
+                              className={isMinimized ? "shrink-0" : ""}
+                              style={
+                                isActive
+                                  ? { color: accentColorValue }
+                                  : undefined
+                              }
+                            >
+                              {item.icon}
+                            </span>
+                            <span
+                              className={`
                           transition-all duration-300 whitespace-nowrap
                           ${isMinimized ? "md:hidden" : ""}
                         `}
-                      >
-                        {item.name}
-                      </span>
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+                            >
+                              {item.name}
+                            </span>
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
         </nav>
 
         {/* Sidebar Footer */}

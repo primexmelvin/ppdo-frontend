@@ -1,24 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [mounted, setMounted] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-    // Check for saved theme preference or default to light
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-
+  const handleToggle = () => {
     // Get toggle button position for the reveal animation
     const toggleButton = document.querySelector(".theme-switch");
     if (toggleButton) {
@@ -36,12 +23,8 @@ export function ThemeToggle() {
       );
     }
 
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    toggleTheme();
   };
-
-  if (!mounted) return null;
 
   return (
     <>
@@ -142,7 +125,7 @@ export function ThemeToggle() {
         <input
           type="checkbox"
           checked={theme === "dark"}
-          onChange={toggleTheme}
+          onChange={handleToggle}
         />
         <span className="theme-slider">
           <div className="theme-star theme-star_1"></div>
