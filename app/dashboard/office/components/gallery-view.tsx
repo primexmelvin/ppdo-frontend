@@ -46,39 +46,16 @@ export function GalleryView({ offices, onToggleFavorite, highlightedCode }: Gall
               office.isFavorite ? "bg-zinc-100 dark:bg-zinc-900" : ""
             }`}
           >
-            {/* Folder Icon - Windows Style */}
+            {/* Avatar Circle with 2 Letters */}
             <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
-              <svg
-                className="w-full h-full drop-shadow-md"
-                viewBox="0 0 64 64"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <div
+                className="w-full h-full rounded-full flex items-center justify-center text-white font-semibold text-lg sm:text-2xl shadow-md group-hover:shadow-lg transition-all"
+                style={{
+                  backgroundColor: `hsl(${(office.code.charCodeAt(0) * 137.5) % 360}, 65%, 55%)`,
+                }}
               >
-                <path
-                  d="M12 48C10.3431 48 9 46.6569 9 45V16C9 14.3431 10.3431 13 12 13H26L28 17H52C53.6569 17 55 18.3431 55 20V45C55 46.6569 53.6569 48 52 48H12Z"
-                  className="fill-black/10 translate-x-0.5 translate-y-0.5"
-                />
-                <path
-                  d="M8 44C8 45.6569 9.34315 47 11 47H50C51.6569 47 53 45.6569 53 44V19C53 17.3431 51.6569 16 50 16H26L24 12H11C9.34315 12 8 13.3431 8 15V44Z"
-                  className="fill-yellow-400 dark:fill-yellow-500 group-hover:fill-yellow-500 dark:group-hover:fill-yellow-400 transition-colors"
-                />
-                <path
-                  d="M8 15C8 13.3431 9.34315 12 11 12H26L28 16H50C51.6569 16 53 17.3431 53 19V21H8V15Z"
-                  className="fill-yellow-300 dark:fill-yellow-600 group-hover:fill-yellow-400 dark:group-hover:fill-yellow-500 transition-colors"
-                />
-                <path
-                  d="M11 12H26L28 16H50C51.6569 16 53 17.3431 53 19V20H8V15C8 13.3431 9.34315 12 11 12Z"
-                  className="fill-white/30"
-                />
-                <path
-                  d="M8 15V44C8 45.6569 9.34315 47 11 47H12V15C12 13.3431 10.6569 12 9 12H8V15Z"
-                  className="fill-white/20"
-                />
-                <path
-                  d="M11 46H50C51.6569 46 53 44.6569 53 43V44C53 45.6569 51.6569 47 50 47H11C9.34315 47 8 45.6569 8 44V43C8 44.6569 9.34315 46 11 46Z"
-                  className="fill-black/15"
-                />
-              </svg>
+                {office.code.slice(0, 2).toUpperCase()}
+              </div>
             </div>
 
             {/* Office Name */}

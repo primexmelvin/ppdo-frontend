@@ -1,3 +1,5 @@
+// app/dashboard/budget/[particularId]/[projectId]/components/FinancialBreakdownCard.tsx
+
 "use client"
 
 import { useState } from "react"

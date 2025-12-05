@@ -33,14 +33,16 @@ export function ListView({ offices, onToggleFavorite, highlightedCode }: ListVie
           }`}
         >
           <div className="flex items-center gap-4 flex-1 min-w-0">
-            {/* Folder Icon Mini */}
-            <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center">
-              <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M3 7C3 5.34315 4.34315 4 6 4H12L14 7H21C22.6569 7 24 8.34315 24 10V20C24 21.6569 22.6569 23 21 23H3C1.34315 23 0 21.6569 0 20V7Z"
-                  className="fill-yellow-400 dark:fill-yellow-500"
-                />
-              </svg>
+            {/* Avatar Circle with 2 Letters */}
+            <div className="flex-shrink-0">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-sm"
+                style={{
+                  backgroundColor: `hsl(${(office.code.charCodeAt(0) * 137.5) % 360}, 65%, 55%)`,
+                }}
+              >
+                {office.code.slice(0, 2).toUpperCase()}
+              </div>
             </div>
 
             {/* Office Info */}
