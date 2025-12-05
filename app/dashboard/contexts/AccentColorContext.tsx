@@ -1,3 +1,5 @@
+// app/dashboard/contexts/AccentColorContext.tsx
+
 "use client";
 
 import {

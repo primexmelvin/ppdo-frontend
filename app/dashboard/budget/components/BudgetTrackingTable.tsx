@@ -1,3 +1,5 @@
+// app/dashboard/budget/components/BudgetTrackingTable.tsx
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -203,271 +205,272 @@ export function BudgetTrackingTable({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Table with fixed header - Added max-height and relative positioning */}
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto relative">
           <table className="w-full">
-          <thead>
-            <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-              {(onEdit || onDelete) && (
-                <th className="px-4 sm:px-6 py-4 text-center no-print">
+            <thead>
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+                {(onEdit || onDelete) && (
+                  <th className="px-4 sm:px-6 py-4 text-center no-print sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                    <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                      Actions
+                    </span>
+                  </th>
+                )}
+                <th className="px-4 sm:px-6 py-4 text-left sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
                   <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                    Actions
+                    PARTICULARS
                   </span>
                 </th>
-              )}
-              <th className="px-4 sm:px-6 py-4 text-left">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  PARTICULARS
-                </span>
-              </th>
-              <th className="px-4 sm:px-6 py-4 text-right">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  TOTAL BUDGET ALLOCATED
-                </span>
-              </th>
-              <th className="px-4 sm:px-6 py-4 text-right">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  TOTAL BUDGET UTILIZED
-                </span>
-              </th>
-              <th className="px-4 sm:px-6 py-4 text-right">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  UTILIZATION RATE
-                </span>
-              </th>
-              <th className="px-4 sm:px-6 py-4 text-right">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  PROJECT COMPLETED (%)
-                </span>
-              </th>
-              <th className="px-4 sm:px-6 py-4 text-right">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  PROJECT DELAYED (%)
-                </span>
-              </th>
-              <th className="px-4 sm:px-6 py-4 text-right">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  PROJECTS ON TRACK (%)
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {budgetItems.length > 0 ? (
-              <>
-                {budgetItems.map((item) => (
-                  <tr
-                    key={item.id}
-                    onClick={(e) => handleRowClick(item, e)}
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer"
-                  >
-                    {(onEdit || onDelete) && (
-                      <td
-                        className="px-4 sm:px-6 py-4 text-center no-print"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="relative" ref={(el) => { menuRefs.current[item.id] = el; }}>
-                          <button
-                            onClick={(e) => handleMenuToggle(item.id, e)}
-                            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                            title="Actions"
-                          >
-                            <svg
-                              className="w-5 h-5 text-zinc-600 dark:text-zinc-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                <th className="px-4 sm:px-6 py-4 text-right sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    TOTAL BUDGET ALLOCATED
+                  </span>
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-right sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    TOTAL BUDGET UTILIZED
+                  </span>
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-right sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    UTILIZATION RATE
+                  </span>
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-right sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    PROJECT COMPLETED (%)
+                  </span>
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-right sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    PROJECT DELAYED (%)
+                  </span>
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-right sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    PROJECTS ON TRACK (%)
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {budgetItems.length > 0 ? (
+                <>
+                  {budgetItems.map((item) => (
+                    <tr
+                      key={item.id}
+                      onClick={(e) => handleRowClick(item, e)}
+                      className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer"
+                    >
+                      {(onEdit || onDelete) && (
+                        <td
+                          className="px-4 sm:px-6 py-4 text-center no-print"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="relative" ref={(el) => { menuRefs.current[item.id] = el; }}>
+                            <button
+                              onClick={(e) => handleMenuToggle(item.id, e)}
+                              className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                              title="Actions"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                              />
-                            </svg>
-                          </button>
-                          {openMenuId === item.id && (
-                            <div className="absolute left-full ml-2 top-0 w-32 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 z-50">
-                              {onEdit && (
-                                <button
-                                  onClick={() => handleEdit(item)}
-                                  className="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
-                                >
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                              <svg
+                                className="w-5 h-5 text-zinc-600 dark:text-zinc-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                />
+                              </svg>
+                            </button>
+                            {openMenuId === item.id && (
+                              <div className="absolute left-full ml-2 top-0 w-32 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 z-50">
+                                {onEdit && (
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
                                   >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                    />
-                                  </svg>
-                                  Edit
-                                </button>
-                              )}
-                              {onDelete && (
-                                <button
-                                  onClick={() => handleDelete(item)}
-                                  className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
-                                >
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                      />
+                                    </svg>
+                                    Edit
+                                  </button>
+                                )}
+                                {onDelete && (
+                                  <button
+                                    onClick={() => handleDelete(item)}
+                                    className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
                                   >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                    />
-                                  </svg>
-                                  Delete
-                                </button>
-                              )}
-                            </div>
-                          )}
-                        </div>
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                      />
+                                    </svg>
+                                    Delete
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                      <td className="px-4 sm:px-6 py-4">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {item.particular}
+                        </span>
                       </td>
-                    )}
+                      <td className="px-4 sm:px-6 py-4 text-right">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {formatCurrency(item.totalBudgetAllocated)}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-right">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {formatCurrency(item.totalBudgetUtilized)}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-right">
+                        <span
+                          className={`text-sm font-semibold ${getUtilizationColor(
+                            item.utilizationRate
+                          )}`}
+                        >
+                          {formatPercentage(item.utilizationRate)}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-right">
+                        <span
+                          className={`text-sm font-medium ${getProjectStatusColor(
+                            item.projectCompleted
+                          )}`}
+                        >
+                          {formatPercentage(item.projectCompleted)}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-right">
+                        <span
+                          className={`text-sm font-medium ${getProjectStatusColor(
+                            item.projectDelayed
+                          )}`}
+                        >
+                          {formatPercentage(item.projectDelayed)}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-right">
+                        <span
+                          className={`text-sm font-medium ${getProjectStatusColor(
+                            item.projectsOnTrack
+                          )}`}
+                        >
+                          {formatPercentage(item.projectsOnTrack)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {/* Totals Row */}
+                  <tr className="border-t-2 border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950/50 font-semibold">
+                    {(onEdit || onDelete) && <td className="no-print"></td>}
                     <td className="px-4 sm:px-6 py-4">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {item.particular}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-right">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {formatCurrency(item.totalBudgetAllocated)}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-right">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {formatCurrency(item.totalBudgetUtilized)}
+                      <span className="text-sm text-zinc-900 dark:text-zinc-100">
+                        TOTAL
                       </span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-right">
                       <span
-                        className={`text-sm font-semibold ${getUtilizationColor(
-                          item.utilizationRate
-                        )}`}
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
                       >
-                        {formatPercentage(item.utilizationRate)}
+                        {formatCurrency(totals.totalBudgetAllocated)}
                       </span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-right">
                       <span
-                        className={`text-sm font-medium ${getProjectStatusColor(
-                          item.projectCompleted
-                        )}`}
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
                       >
-                        {formatPercentage(item.projectCompleted)}
+                        {formatCurrency(totals.totalBudgetUtilized)}
                       </span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-right">
                       <span
-                        className={`text-sm font-medium ${getProjectStatusColor(
-                          item.projectDelayed
+                        className={`text-sm ${getUtilizationColor(
+                          totalUtilizationRate
                         )}`}
                       >
-                        {formatPercentage(item.projectDelayed)}
+                        {formatPercentage(totalUtilizationRate)}
                       </span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-right">
                       <span
-                        className={`text-sm font-medium ${getProjectStatusColor(
-                          item.projectsOnTrack
-                        )}`}
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
                       >
-                        {formatPercentage(item.projectsOnTrack)}
+                        {formatPercentage(
+                          totals.projectCompleted / budgetItems.length
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 text-right">
+                      <span
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
+                      >
+                        {formatPercentage(
+                          totals.projectDelayed / budgetItems.length
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 text-right">
+                      <span
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
+                      >
+                        {formatPercentage(
+                          totals.projectsOnTrack / budgetItems.length
+                        )}
                       </span>
                     </td>
                   </tr>
-                ))}
-                {/* Totals Row */}
-                <tr className="border-t-2 border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950/50 font-semibold">
-                  {(onEdit || onDelete) && <td className="no-print"></td>}
-                  <td className="px-4 sm:px-6 py-4">
-                    <span className="text-sm text-zinc-900 dark:text-zinc-100">
-                      TOTAL
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatCurrency(totals.totalBudgetAllocated)}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatCurrency(totals.totalBudgetUtilized)}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-right">
-                    <span
-                      className={`text-sm ${getUtilizationColor(
-                        totalUtilizationRate
-                      )}`}
-                    >
-                      {formatPercentage(totalUtilizationRate)}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatPercentage(
-                        totals.projectCompleted / budgetItems.length
-                      )}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatPercentage(
-                        totals.projectDelayed / budgetItems.length
-                      )}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatPercentage(
-                        totals.projectsOnTrack / budgetItems.length
-                      )}
-                    </span>
+                </>
+              ) : (
+                <tr>
+                  <td
+                    colSpan={onEdit || onDelete ? 8 : 7}
+                    className="px-4 sm:px-6 py-12 text-center"
+                  >
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      No budget data available.
+                    </p>
                   </td>
                 </tr>
-              </>
-            ) : (
-              <tr>
-                <td
-                  colSpan={onEdit || onDelete ? 7 : 7}
-                  className="px-4 sm:px-6 py-12 text-center"
-                >
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    No budget data available.
-                  </p>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
       {/* Add Modal */}
       {showAddModal && (

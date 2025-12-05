@@ -1,3 +1,5 @@
+// app/dashboard/budget/components/ProjectsTable.tsx
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -219,290 +221,291 @@ export function ProjectsTable({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Table with fixed header */}
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto relative">
           <table className="w-full">
-          <thead>
-            <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-              {(onEdit || onDelete) && (
-                <th className="px-3 sm:px-4 py-3 text-center no-print">
+            <thead>
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+                {(onEdit || onDelete) && (
+                  <th className="px-3 sm:px-4 py-3 text-center no-print sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                    <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                      Actions
+                    </span>
+                  </th>
+                )}
+                <th className="px-3 sm:px-4 py-3 text-left min-w-[200px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
                   <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                    Actions
+                    Project Name
                   </span>
                 </th>
-              )}
-              <th className="px-3 sm:px-4 py-3 text-left min-w-[200px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Project Name
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left min-w-[150px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Implementing Office
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-right min-w-[120px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Allocated Budget
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left min-w-[110px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Date Started
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left min-w-[110px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Completion Date
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-right min-w-[120px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Revised Budget
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-right min-w-[110px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Utilization Rate (%)
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-right min-w-[110px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Balance
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-right min-w-[130px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Project Accomplishment (%)
-                </span>
-              </th>
-              <th className="px-3 sm:px-4 py-3 text-left min-w-[150px]">
-                <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                  Remarks
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {projects.length > 0 ? (
-              <>
-                {projects.map((project) => (
-                  <tr
-                    key={project.id}
-                    onClick={(e) => handleRowClick(project, e)}
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer"
-                  >
-                    {(onEdit || onDelete) && (
-                      <td
-                        className="px-3 sm:px-4 py-3 text-center no-print"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="relative" ref={(el) => { menuRefs.current[project.id] = el; }}>
-                          <button
-                            onClick={(e) => handleMenuToggle(project.id, e)}
-                            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                            title="Actions"
-                          >
-                            <svg
-                              className="w-5 h-5 text-zinc-600 dark:text-zinc-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                <th className="px-3 sm:px-4 py-3 text-left min-w-[150px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Implementing Office
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-right min-w-[120px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Allocated Budget
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-left min-w-[110px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Date Started
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-left min-w-[110px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Completion Date
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-right min-w-[120px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Revised Budget
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-right min-w-[110px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Utilization Rate (%)
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-right min-w-[110px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Balance
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-right min-w-[130px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Project Accomplishment (%)
+                  </span>
+                </th>
+                <th className="px-3 sm:px-4 py-3 text-left min-w-[150px] sticky top-0 bg-zinc-50 dark:bg-zinc-950 z-10">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
+                    Remarks
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {projects.length > 0 ? (
+                <>
+                  {projects.map((project) => (
+                    <tr
+                      key={project.id}
+                      onClick={(e) => handleRowClick(project, e)}
+                      className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer"
+                    >
+                      {(onEdit || onDelete) && (
+                        <td
+                          className="px-3 sm:px-4 py-3 text-center no-print"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="relative" ref={(el) => { menuRefs.current[project.id] = el; }}>
+                            <button
+                              onClick={(e) => handleMenuToggle(project.id, e)}
+                              className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                              title="Actions"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                              />
-                            </svg>
-                          </button>
-                          {openMenuId === project.id && (
-                            <div className="absolute left-full ml-2 top-0 w-32 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 z-50">
-                              {onEdit && (
-                                <button
-                                  onClick={() => handleEdit(project)}
-                                  className="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
-                                >
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                              <svg
+                                className="w-5 h-5 text-zinc-600 dark:text-zinc-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                />
+                              </svg>
+                            </button>
+                            {openMenuId === project.id && (
+                              <div className="absolute left-full ml-2 top-0 w-32 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 z-50">
+                                {onEdit && (
+                                  <button
+                                    onClick={() => handleEdit(project)}
+                                    className="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
                                   >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                    />
-                                  </svg>
-                                  Edit
-                                </button>
-                              )}
-                              {onDelete && (
-                                <button
-                                  onClick={() => handleDelete(project)}
-                                  className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
-                                >
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                      />
+                                    </svg>
+                                    Edit
+                                  </button>
+                                )}
+                                {onDelete && (
+                                  <button
+                                    onClick={() => handleDelete(project)}
+                                    className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2"
                                   >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                    />
-                                  </svg>
-                                  Delete
-                                </button>
-                              )}
-                            </div>
-                          )}
-                        </div>
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                      />
+                                    </svg>
+                                    Delete
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                      <td className="px-3 sm:px-4 py-3">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {project.projectName}
+                        </span>
                       </td>
-                    )}
-                    <td className="px-3 sm:px-4 py-3">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {project.projectName}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-3">
-                      <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                        {project.implementingOffice}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-3 text-right">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {formatCurrency(project.allocatedBudget)}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-3">
-                      <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                        {formatDate(project.dateStarted)}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-3">
-                      <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                        {formatDate(project.completionDate)}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-3 text-right">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {formatCurrency(project.revisedBudget)}
+                      <td className="px-3 sm:px-4 py-3">
+                        <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                          {project.implementingOffice}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3 text-right">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {formatCurrency(project.allocatedBudget)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3">
+                        <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                          {formatDate(project.dateStarted)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3">
+                        <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                          {formatDate(project.completionDate)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3 text-right">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {formatCurrency(project.revisedBudget)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3 text-right">
+                        <span
+                          className={`text-sm font-semibold ${getUtilizationColor(
+                            project.utilizationRate
+                          )}`}
+                        >
+                          {formatPercentage(project.utilizationRate)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3 text-right">
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {formatCurrency(project.balance)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3 text-right">
+                        <span
+                          className={`text-sm font-medium ${getAccomplishmentColor(
+                            project.projectAccomplishment
+                          )}`}
+                        >
+                          {formatPercentage(project.projectAccomplishment)}
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 py-3">
+                        <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                          {project.remarks || "-"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {/* Totals Row */}
+                  <tr className="border-t-2 border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950/50 font-semibold">
+                    {(onEdit || onDelete) && <td className="no-print"></td>}
+                    <td className="px-3 sm:px-4 py-3" colSpan={2}>
+                      <span className="text-sm text-zinc-900 dark:text-zinc-100">
+                        TOTAL
                       </span>
                     </td>
                     <td className="px-3 sm:px-4 py-3 text-right">
                       <span
-                        className={`text-sm font-semibold ${getUtilizationColor(
-                          project.utilizationRate
-                        )}`}
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
                       >
-                        {formatPercentage(project.utilizationRate)}
+                        {formatCurrency(totals.allocatedBudget)}
                       </span>
                     </td>
-                    <td className="px-3 sm:px-4 py-3 text-right">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                        {formatCurrency(project.balance)}
+                    <td className="px-3 sm:px-4 py-3" colSpan={2}>
+                      <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                        -
                       </span>
                     </td>
                     <td className="px-3 sm:px-4 py-3 text-right">
                       <span
-                        className={`text-sm font-medium ${getAccomplishmentColor(
-                          project.projectAccomplishment
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
+                      >
+                        {formatCurrency(totals.revisedBudget)}
+                      </span>
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 text-right">
+                      <span
+                        className={`text-sm ${getUtilizationColor(
+                          totalUtilizationRate
                         )}`}
                       >
-                        {formatPercentage(project.projectAccomplishment)}
+                        {formatPercentage(totalUtilizationRate)}
+                      </span>
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 text-right">
+                      <span
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
+                      >
+                        {formatCurrency(totals.balance)}
+                      </span>
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 text-right">
+                      <span
+                        className="text-sm"
+                        style={{ color: accentColorValue }}
+                      >
+                        {formatPercentage(totals.projectAccomplishment)}
                       </span>
                     </td>
                     <td className="px-3 sm:px-4 py-3">
                       <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                        {project.remarks || "-"}
+                        -
                       </span>
                     </td>
+                    {(onEdit || onDelete) && <td className="no-print"></td>}
                   </tr>
-                ))}
-                {/* Totals Row */}
-                <tr className="border-t-2 border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950/50 font-semibold">
-                  {(onEdit || onDelete) && <td className="no-print"></td>}
-                  <td className="px-3 sm:px-4 py-3" colSpan={2}>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-100">
-                      TOTAL
-                    </span>
+                </>
+              ) : (
+                <tr>
+                  <td
+                    colSpan={onEdit || onDelete ? 12 : 11}
+                    className="px-4 sm:px-6 py-12 text-center"
+                  >
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      No projects found.
+                    </p>
                   </td>
-                  <td className="px-3 sm:px-4 py-3 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatCurrency(totals.allocatedBudget)}
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3" colSpan={2}>
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      -
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatCurrency(totals.revisedBudget)}
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 text-right">
-                    <span
-                      className={`text-sm ${getUtilizationColor(
-                        totalUtilizationRate
-                      )}`}
-                    >
-                      {formatPercentage(totalUtilizationRate)}
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatCurrency(totals.balance)}
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 text-right">
-                    <span
-                      className="text-sm"
-                      style={{ color: accentColorValue }}
-                    >
-                      {formatPercentage(totals.projectAccomplishment)}
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3">
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      -
-                    </span>
-                  </td>
-                  {(onEdit || onDelete) && <td className="no-print"></td>}
                 </tr>
-              </>
-            ) : (
-              <tr>
-                <td
-                  colSpan={onEdit || onDelete ? 10 : 10}
-                  className="px-4 sm:px-6 py-12 text-center"
-                >
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    No projects found.
-                  </p>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
       {/* Add Modal */}
       {showAddModal && (

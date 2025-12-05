@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { Toaster } from "@/components/ui/sonner";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -18,7 +19,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Provincial Planning and Development Office ",
+  title: "Provincial Planning and Development Office",
   description:
     "Your trusted source for local news, stories, and community updates in Tarlac",
 };
@@ -31,7 +32,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${cinzel.variable} ${inter.variable} antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
