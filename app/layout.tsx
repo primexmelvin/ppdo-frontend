@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   title: "Provincial Planning and Development Office",
   description:
     "Your trusted source for local news, stories, and community updates in Tarlac",
+  icons: {
+    icon: "/tarlac_logo.ico",
+  },
 };
 
 export default function RootLayout({
